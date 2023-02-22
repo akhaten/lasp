@@ -1,0 +1,9 @@
+numpy
+scipy
+scikitimage
+matplotlib
+
+# Package for Jupyter
+ipywidgets
+ipykernel
+ipympl
