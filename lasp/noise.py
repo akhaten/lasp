@@ -9,7 +9,7 @@ def additive_gaussian_noise(signal: numpy.ndarray, snr: float) -> numpy.ndarray:
         signal: signal
         snr : signal to noise ratio (not in db)
     """
-    signal_power = lasp.utils.metrics.power(signal)
+    signal_power = lasp.metrics.power(signal)
     noise_power = signal_power / snr
     sigma, mu = numpy.sqrt(noise_power), 0.0
     noise = numpy.random.normal(loc=mu, scale=sigma, size=signal.shape)
