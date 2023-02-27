@@ -1,6 +1,5 @@
 numpy
 scipy
-scikitimage
 matplotlib
 
 # Package for Jupyter
