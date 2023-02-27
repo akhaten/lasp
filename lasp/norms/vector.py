@@ -1,6 +1,6 @@
 import numpy
 
-import lasp.utils.metrics
+import lasp.metrics
 
 def euclidean(signal: numpy.ndarray) -> float:
     return numpy.sqrt(lasp.utils.metrics.power(signal))   

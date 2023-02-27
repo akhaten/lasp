@@ -2,8 +2,8 @@ import numpy
 import numpy.linalg
 from scipy.fft import fft, fft2, ifft2
 
-import lasp.utils.norms.vector
-import lasp.utils.thresholding
+import lasp.norms.vector
+import lasp.thresholding
 
 # def lasso(y: numpy.ndarray, H: numpy.ndarray, lamda: float, ro: float, nb_iterations: int) -> numpy.ndarray:
     
@@ -63,8 +63,8 @@ def rpca(y: numpy.ndarray, lamda: float, mu: float, nb_iterations: int) -> numpy
     # while not(convergence):
     while(iter < nb_iterations):
     
-        b = lasp.utils.thresholding.soft(y - t + (1/mu) * v, epsilon=lamda/mu)
-        t = lasp.utils.thresholding.singular_value_soft(y - b + (1/mu) * v, epsilon=1/mu)
+        b = lasp.thresholding.soft(y - t + (1/mu) * v, epsilon=lamda/mu)
+        t = lasp.thresholding.singular_value_soft(y - b + (1/mu) * v, epsilon=1/mu)
         v += mu * (y - b - t)
 
         iter += 1

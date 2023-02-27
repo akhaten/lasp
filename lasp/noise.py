@@ -1,7 +1,7 @@
 
 import numpy
 
-import lasp.utils.metrics
+import lasp.metrics
 
 
 def additive_gaussian_noise(signal: numpy.ndarray, snr: float) -> numpy.ndarray:
