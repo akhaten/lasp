@@ -4,7 +4,7 @@ import numpy
 import lasp.metrics
 
 
-def additive_gaussian_noise(signal: numpy.ndarray, snr: float) -> numpy.ndarray:
+def additive_white_gaussian_noise(signal: numpy.ndarray, snr: float) -> numpy.ndarray:
     """awgn
         signal: signal
         snr : signal to noise ratio (not in db)
