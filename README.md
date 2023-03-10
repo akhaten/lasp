@@ -8,20 +8,37 @@ differential computing.
 
 ## Algorithms for signal processing
 
-<!-- - ADMM-LASSO  -->
-- ADMM-RPCA
-<!-- - ADMM-TV : TODO
-- ISTA : TODO -->
+- [ ] ISTA
+- [ ] ADMM-LASSO
+- [ ] ADMM-TV
+- [x] ADMM-RPCA
+- [ ] BM3D (Block Matching and 3D filtering)
 
-## Utils
+## Transforms
 
-<!-- - Wavelet 1D, 2D : TODO -->
+- [ ] Wavelet 1D
+- [ ] Wavelet 2D
 
-## Estimator
+
+## Estimators
+
+- [x] Least Square
+- [ ] Total Least Square
 
 
 ## Noise
 
-<!-- - selt and pepper: TODO -->
+- [x] additve white gaussian noise (awgn)
+- [ ] selt and pepper
+
+## Filters
+
+- [x] Bilateral
+- [x] Gaussian
+- [x] NLM (Non Local Mean)
+- [x] Anisotropic
+- [ ] Wiener
+- [ ] Inverse
+- [ ] Pseudo-Inverse
 
 
