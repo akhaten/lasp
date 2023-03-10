@@ -1,9 +1,12 @@
 import numpy
 import numpy.linalg
-from scipy.fft import fft, fft2, ifft2
+import enum
+# from scipy.fft import fft, fft2, ifft2
 
 import lasp.norms.vector
 import lasp.thresholding
+
+
 
 # def lasso(y: numpy.ndarray, H: numpy.ndarray, lamda: float, ro: float, nb_iterations: int) -> numpy.ndarray:
     
@@ -43,10 +46,10 @@ import lasp.thresholding
 def lasso(y: numpy.ndarray, H: numpy.ndarray, lamda: float, ro: float, nb_iterations: int) -> numpy.ndarray:
     pass
 
-def tv() -> numpy.ndarray:
+def tv(y: numpy.ndarray, H: numpy.ndarray, mu: float, ro: float, nb_iterations: int) -> numpy.ndarray:
     """Total Variation
     """
-    pass
+    mu * H.T @ y
 
 
 def rpca(y: numpy.ndarray, lamda: float, mu: float, nb_iterations: int) -> numpy.ndarray:
@@ -70,6 +73,16 @@ def rpca(y: numpy.ndarray, lamda: float, mu: float, nb_iterations: int) -> numpy
         iter += 1
 
     return b, t
+
+
+# class Regularization(enum.Enum):
+#     NORM_1 = 0
+#     NORM_2_SQUARE = 1
+#     NORM_1_GRADIENT = 2
+
+
+# def admm(y, H, lamda: float, reg: Regularization) -> numpy.ndarray:
+#     pass
 
 
 
