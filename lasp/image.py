@@ -11,7 +11,10 @@ def histogram(image_greyscale: numpy.ndarray) -> numpy.ndarray:
     return hist
 
 
-# def recadrage(image_greyscale: numpy.ndarray) -> numpy.ndarray:
-
-#     def t(f) -> float:
-        
+def sparse(shape: tuple[int, int], epsilon: float) -> numpy.ndarray:
+    m, n = shape
+    nb_pixel_to_one = int((1-epsilon)*m*n)
+    d: numpy.ndarray = numpy.zeros(shape=m*n)
+    d[0:nb_pixel_to_one] = 1
+    d = numpy.random.permutation(d)
+    return numpy.reshape(d, (m, n))
