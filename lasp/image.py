@@ -18,3 +18,5 @@ def sparse(shape: tuple[int, int], epsilon: float) -> numpy.ndarray:
     d[0:nb_pixel_to_one] = 1
     d = numpy.random.permutation(d)
     return numpy.reshape(d, (m, n))
+
+

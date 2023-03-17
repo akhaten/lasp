@@ -5,10 +5,11 @@ import enum
 
 
 
-def bilateral_filter(image: numpy.ndarray, sigma_d: float, sigma_r: float, size: int) -> numpy.ndarray:
+def bilateral_filter(image: numpy.ndarray, sigma_spatial: float, sigma_color: float, size: int) -> numpy.ndarray:
+
     """ Bilateral filter
         
-        Params:
+        Parameters:
             - image: image
             - sigma_d: sigma spatial
             - sigma_r: sigma color
@@ -19,8 +20,8 @@ def bilateral_filter(image: numpy.ndarray, sigma_d: float, sigma_r: float, size:
     """
 
     def weight(i: int, j: int, k: int, l: int) -> float:
-        expr1: float = ( (i-k)**2 + (j-l)**2 ) / ( 2*(sigma_d**2) )
-        expr2: float = ((image[i, j]-image[k, l]) ** 2) / (2*(sigma_r**2))
+        expr1: float = ( (i-k)**2 + (j-l) ** 2 ) / ( 2*(sigma_spatial**2) )
+        expr2: float = ( (image[i, j]-image[k, l]) ** 2 ) / ( 2*(sigma_color**2) )
         return numpy.exp(-expr1-expr2)
 
     nb_rows, nb_cols = image.shape
@@ -43,7 +44,7 @@ def bilateral_filter(image: numpy.ndarray, sigma_d: float, sigma_r: float, size:
     return image_d
 
 
-def non_local_mean(image: numpy.ndarray, sigma: float, sigma_r: float, size: int) -> numpy.ndarray:
+def non_local_mean(image: numpy.ndarray, sigma: float, size: int) -> numpy.ndarray:
 
     def weight(i: int, j: int, k: int, l: int) -> float:
         expr: float = ((image[i, j]-image[k, l]) ** 2) / (2*(sigma**2))

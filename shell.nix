@@ -9,6 +9,7 @@ pkgs.mkShell {
         python310Packages.scipy
         python310Packages.scikitimage
         python310Packages.matplotlib
+        python310Packages.pandas
 
 
         # Package for Jupyter

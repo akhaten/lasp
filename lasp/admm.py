@@ -1,10 +1,11 @@
 import numpy
 import numpy.linalg
 import enum
-# from scipy.fft import fft, fft2, ifft2
+from scipy.fft import fft, fft2, ifft2
 
 import lasp.norms.vector
 import lasp.thresholding
+import lasp.utils
 
 
 
@@ -20,31 +21,121 @@ import lasp.thresholding
     
 #     # convergence = False
 #     iter = 0
+
+#     exp1 = 1 / ( Dh.T @ Dh + ro * numpy.identity(y.shape[0]) )
+#     exp1 = ifft2(exp1)
+
 #     # while not(convergence):
 #     while iter < nb_iterations:
 
-#         exp1 = 1 / ( Dh.T @ Dh + ro * numpy.identity(y.shape[0]) )
+        
 #         exp2 = ifft2(Dh.T) * fft2(y) + ro*z - u
 #         x = ifft2(exp1) * fft2(exp2)
 
-#         z = lasp.utils.thresholding.soft(x, epsilon=lamda/ro)
+#         z = lasp.thresholding.soft(x, epsilon=lamda/ro)
 
-#         u += ro * (z - x)
+#         u += ro * (z - x_prev)
         
-#         score = lasp.utils.norms.vector.euclidean(x-x_prev) \
-#             / lasp.utils.norms.vector.euclidean(x)
-
-#         # print(score)
-#         # convergence = score < tolerance
+#         # score = lasp.norms.vector.euclidean(x-x_prev) \
+#         #     / lasp.norms.vector.euclidean(x)
 
 #         x_prev = numpy.copy(x)
-
 #         iter += 1
 
 #     return x
 
 def lasso(y: numpy.ndarray, H: numpy.ndarray, lamda: float, ro: float, nb_iterations: int) -> numpy.ndarray:
-    pass
+
+    # tolerance: float
+    u_k = numpy.zeros_like(y)
+    x_k = numpy.copy(y)
+    z_k = numpy.copy(y)
+    
+    # convergence = False
+    iter = 0
+    
+    hth = H.T @ H
+    hty = H.T @ y
+    n, m = hth.shape
+    exp1 = numpy.linalg.inv(hth + ro * numpy.eye(n, m))
+
+    # while not(convergence):
+    while iter < nb_iterations:
+
+        
+        exp2 = hty + ro * (z_k - u_k / ro)
+        x_k1 = exp1 @ exp2
+
+        z_k1 = lasp.thresholding.soft(x_k, epsilon=lamda/ro)
+
+        u_k1 = u_k + ro * (z_k - x_k)
+
+        x_k = numpy.copy(x_k1)
+        z_k = numpy.copy(z_k1)
+        u_k = numpy.copy(u_k1)
+
+        # score = lasp.norms.vector.euclidean(x-x_prev) \
+        #     / lasp.norms.vector.euclidean(x)
+
+        iter += 1
+
+    return x_k
+
+# def lasso(y: numpy.ndarray, h: numpy.ndarray, lamda: float, ro: float, nb_iterations: int) -> numpy.ndarray:
+
+#     # tolerance: float
+#     u_k = numpy.zeros_like(y)
+#     x_k = numpy.copy(y)
+#     z_k = numpy.copy(y)
+
+#     n = numpy.prod(numpy.array(h.shape))
+#     Dh = (1 / numpy.sqrt(n)) * fft2(h)
+    
+#     # convergence = False
+#     iter = 0
+    
+#     hth = H.T @ H
+#     hty = H.T @ y
+#     n, m = hth.shape
+#     exp1 = numpy.linalg.inv(hth + ro * numpy.eye(n, m))
+
+#     # while not(convergence):
+#     while iter < nb_iterations:
+
+        
+#         exp2 = hty + ro * (z_k - u_k / ro)
+#         x_k1 = exp1 @ exp2
+
+#         z_k1 = lasp.thresholding.soft(x_k, epsilon=lamda/ro)
+
+#         u_k1 = u_k + ro * (z_k - x_k)
+
+#         x_k = numpy.copy(x_k1)
+#         z_k = numpy.copy(z_k1)
+#         u_k = numpy.copy(u_k1)
+
+#         # score = lasp.norms.vector.euclidean(x-x_prev) \
+#         #     / lasp.norms.vector.euclidean(x)
+
+#         iter += 1
+
+#     return x_k
+
+def l2(y: numpy.ndarray, h: numpy.ndarray, lamda: float) -> numpy.ndarray:
+
+    n, m = h.shape
+    h_pad = numpy.zeros_like(y)
+    h_pad[0:n, 0:m] = numpy.copy(h)
+    center = numpy.array(h.shape) // 2
+
+    h_pad_shifted = lasp.utils.circshift(h_pad, 1-center)
+
+    eigen_values = fft2(h_pad_shifted)
+
+    d = numpy.linalg.inv(eigen_values**2 + lamda) @ eigen_values
+
+    return ifft2(d * fft(y))
+
 
 def tv(y: numpy.ndarray, H: numpy.ndarray, mu: float, ro: float, nb_iterations: int) -> numpy.ndarray:
     """Total Variation
@@ -73,16 +164,6 @@ def rpca(y: numpy.ndarray, lamda: float, mu: float, nb_iterations: int) -> numpy
         iter += 1
 
     return b, t
-
-
-# class Regularization(enum.Enum):
-#     NORM_1 = 0
-#     NORM_2_SQUARE = 1
-#     NORM_1_GRADIENT = 2
-
-
-# def admm(y, H, lamda: float, reg: Regularization) -> numpy.ndarray:
-#     pass
 
 
 

@@ -28,5 +28,5 @@ class Window2D:
                 yield self.__getitem__((i, j))
 
           
-def circshift(matrix: numpy.ndarray, center: numpy.ndarray) -> numpy.ndarray:
-    return numpy.roll(matrix, 1-center, [0, 1])
+def circshift(matrix: numpy.ndarray, shift: numpy.ndarray) -> numpy.ndarray:
+    return numpy.roll(matrix, shift, [0, 1])

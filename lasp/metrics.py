@@ -25,8 +25,8 @@ def mean_squared_error(signal_1: numpy.ndarray, signal_2: numpy.ndarray) -> floa
 
 def peak_signal_to_noise_ratio(signal_1: numpy.ndarray, signal_2: numpy.ndarray) -> float:
     intensity_max = numpy.max(signal_1)
-    mae = mean_squared_error(signal_1, signal_2)
-    return 10 * numpy.log10( (intensity_max**2) / mae )
+    mse = mean_squared_error(signal_1, signal_2)
+    return 10 * numpy.log10( (intensity_max**2) / mse )
 
 def power(signal: numpy.ndarray) -> float:
     # nb_value = numpy.prod(numpy.array(signal.shape))
