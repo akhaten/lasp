@@ -1,0 +1,84 @@
+\section{Block-matching and 3D filtering (BM3D)}
+\frame{\sectionpage}
+
+\begin{frame}{Principle}
+
+\begin{itemize}
+    \item Iterative method
+    \item Using knowledge about neighbors
+    \item Grouping patches with a "similarity" measure
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Approach}
+\begin{itemize}
+    \item Split image into overlapping tiles
+    \item Group tiles by their pairwise structural similarity
+    \item Perform 3D "naive" denoising on each stacked block
+    \item Return each block to their original place on the image
+\end{itemize}
+\end{frame}
+
+% \begin{frame}{Algorithm}
+% \begin{algorithm}[H]
+%     \caption{Filtering Algorithm} % \label{euclid}
+%     \begin{algorithmic}[1]
+%         \Procedure{Denoising With BM3D}{}\newline
+%         \textbf{Input:} $I$, $\sigma_{spatial}$, $threshold$ \\
+%         \textbf{Output:} $I_{D}$
+%         \State{$patch_list = list()$}
+%         \For{$patch \in \text{windows}\left(I\right)$}
+%             \State{$patches = list()$}
+%             \For{$other_path \in \text{windows}\left(I\right)$}
+%                 \State{$similarity = \text{SSIM}\left(path, other_patch\right)$}
+%                 \If{$similarity > threshold$}
+%                     \State{$\text{insert}\left(other_patch\right)$}
+%                 \EndIf
+%             \EndFor
+%             \State{$\text{insert}\left(patch_list, patches\right)$}
+%         \EndFor
+%         \For{$patches \in patch_list$}
+%             % \State{$sparse = \text{transform_sparse}\left(patches\right)$}
+%             % \State{$sparse = \text{thresholding}\left(sparse\right)$}
+%             % \State{$sparse = \text{transform_sparse_inv}\left(patches\right)$}
+%             % \For{$patch \in sparse$}
+%             %     \State{$\text{place_into}\left(I_D, patch\right)$}
+%             % \EndFor
+%         \EndFor
+%         \EndProcedure
+%     \end{algorithmic}
+%     % \label{alg_1}
+% \end{algorithm}
+% \end{frame}
+
+\begin{frame}{Data}
+\centering
+\begin{columns}
+\column{.5\textwidth}
+\centering
+\includegraphics[scale=0.25]{images/results/original.png}
+\column{.5\textwidth}
+\centering
+\includegraphics[scale=0.25]{images/results/noised.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Results}
+\centering
+\begin{columns}
+\column{.5\textwidth}
+\centering
+\includegraphics[scale=0.25]{images/results/bm3d/bm3d_mae.png}
+\column{.5\textwidth}
+\centering
+\includegraphics[scale=0.25]{images/results/bm3d/bm3d_mse.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Results (min sigma 0.483)}
+\centering
+\centering
+\includegraphics[scale=0.6]{images/results/bm3d/bm3d_best.png}
+\end{frame}
+

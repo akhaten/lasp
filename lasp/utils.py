@@ -1,4 +1,5 @@
 import numpy
+import enum
 
 class Window2D:
 
@@ -30,3 +31,10 @@ class Window2D:
           
 def circshift(matrix: numpy.ndarray, shift: numpy.ndarray) -> numpy.ndarray:
     return numpy.roll(matrix, shift, [0, 1])
+
+
+
+
+
+
+    

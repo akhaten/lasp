@@ -1,0 +1,27 @@
+\section{Autoencoder}
+\frame{\sectionpage}
+
+\begin{frame}{Principle}
+
+\begin{itemize}
+\item Deep-learning method
+\item Approach based on learning the noise density and PSF
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Approach}
+\begin{itemize}
+    \item Take N convolutions progressively increasing the number of channels
+    \item Linearize the CNN section and reduce the size to create the bottleneck
+    \item Flip the encoder section around to recreate the image
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Problems}
+\begin{itemize}
+    \item Having to learn hyper-parameters from a training set implies specialization
+    \item Difficulty to make the model resolution-independent
+    \item Computationally (and resourcefully) expensive to train
+\end{itemize}
+\end{frame}

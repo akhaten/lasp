@@ -1,0 +1,28 @@
+\section{ADMM}
+\frame{\sectionpage}
+
+\begin{frame}{Défintion}
+\begin{equation*}
+\hat{x} = \arg \min_{x} \{ \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(x) \}
+\end{equation*}
+\begin{enumerate}
+    \item $a$ est une image non observable
+    \item $b$ est l'image observable depuis laquelle pour estimer $a$
+    \item $\hat{a}$ est l'image estimée
+    \item $P(a)$ est un "à priori" sur $a$
+\end{enumerate}
+\vspace{3mm}
+On cherche une estimation de $a$ tel que la différence entre $a$ et $b$
+soit minimale et sachant que l'on a un connaissance $P(a)$ sur l'image à estimer.
+\end{frame}
+
+\begin{frame}{À priori pour le débruitage}
+\begin{enumerate}
+    \item $P(a) = \lVert a \rVert_{1}$
+    \item $P(a) = \lVert a \rVert_{2}^{2}$
+    \item $P(a) = \lVert \nabla a \rVert_{1}$
+\end{enumerate}
+\end{frame}
+
+
+

@@ -29,6 +29,23 @@ def additive_white_gaussian_noise(signal: numpy.ndarray, snr: float) -> numpy.nd
     signal_noised[signal_noised < 0.0] = 0.0
     return signal_noised
 
+def multiplicative_noise(signal: numpy.ndarray, snr: float) -> numpy.ndarray:
+
+    # TODO: TEST
+
+    signal_power = lasp.metrics.power(signal)
+    noise_power = signal_power / snr
+    sigma, mu = numpy.sqrt(noise_power), 0.0
+    noise = numpy.random.normal(loc=mu, scale=sigma, size=signal.shape)
+    signal_noised = signal * (1+noise)
+    # grey level image must not have negative value
+    signal_noised[signal_noised < 0.0] = 0.0
+    return signal_noised
+
+
+def pepper_and_selt(signal: numpy.ndarray) -> numpy.ndarray:
+    pass
+
 awgn = additive_white_gaussian_noise
 
 

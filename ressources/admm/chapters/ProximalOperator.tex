@@ -1,0 +1,312 @@
+\section{Generality}
+\frame{\sectionpage}
+
+% \begin{frame}{Défintion}
+% \begin{equation*}
+% \hat{a} = \arg \min_{a} \{ \frac{1}{2} \lVert b - a \rVert_{2}^{2} + \lambda P(a) \}
+% \end{equation*}
+% \begin{enumerate}
+%     \item $a$ est une image non observable
+%     \item $b$ est l'image observable depuis laquelle pour estimer $a$
+%     \item $\hat{a}$ est l'image estimée
+%     \item $P(a)$ est un "à priori" sur $a$
+% \end{enumerate}
+% \vspace{3mm}
+% On cherche une estimation de $a$ tel que la différence entre $a$ et $b$
+% soit minimale et sachant que l'on a une connaissance $P(a)$ sur l'image à estimer.
+% \end{frame}
+
+% \begin{frame}{À priori pour le débruitage}
+% \begin{enumerate}
+%     \item $P(a) = \lVert a \rVert_{1}$
+%     \item $P(a) = \lVert a \rVert_{2}^{2}$
+%     \item $P(a) = \lVert \nabla a \rVert_{1}$
+% \end{enumerate}
+% \end{frame}
+
+% \begin{frame}{Débruitage}
+% Formulation d'un problème de débruitage:
+% \begin{equation*}
+% y = Hx + n
+% \end{equation*}
+% \begin{enumerate}
+%     \item $y$ est un signal bruité de dimension $NM$
+%     \item $H$ est une matrice BCCB de dimension $NM \times NM$
+%     \item $x$ est le signal à retrouver de dimension $NM$
+%     \item $n$ est un bruit additif blanc gaussien de dimension $NM$
+% \end{enumerate}
+% \end{frame}
+
+% \begin{frame}{À priori pour le débruitage}
+% Le débruitage consiste à minimiser le bruit.
+% \begin{align*}
+% y &= Hx + n \\
+% \iff n &= y - Hx
+% \end{align*}
+% À l'aide d'un opérateur proximal, on a \textbf{le problème général d'optimisation suivant} :
+% \begin{align*}
+% \hat{x} &= \arg \min_{x} \{ \frac{1}{2} \lVert n \rVert_{2}^{2} + \lambda P(x) \} \\
+% &= \arg \min_{x} \{ \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(x) \}
+% \end{align*}
+% \end{frame}
+
+% \begin{frame}{$P(x) = \lVert \nabla x \rVert_{1}$}
+% \begin{align}
+% \hat{y} &= \arg \min_{x} \{ \frac{1}{2} \lVert n \rVert_{2}^{2} + \lambda P(x) \} \\
+% &= \arg \min_{x} \{ \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(x) \}
+% \end{align}
+% \end{frame}
+
+\begin{frame}{Débruitage avec un à priori P(x)}
+
+Opérateur proximal : $\hat{x} = \arg\min\limits_{x} \{ \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(x)$ \} \\
+
+\vspace{5mm}
+
+Résolution avec l'ADMM:
+\begin{itemize}
+    \item Équation : $\min\limits_{x, z} \{ \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(z) \}$
+    \item Contrainte : ...
+\end{itemize}
+
+\vspace{5mm}
+
+Lagrangien augmenté :
+
+\begin{align*}
+L(x, z, u) 
+&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(z) +
+u^{T}(x-z) + \frac{\rho}{2} \lVert x-z \rVert_{2}^{2} \\
+&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(z) +
+\frac{\rho}{2} \lVert x-z+\frac{u}{\rho} \rVert_{2}^{2} - \frac{\lVert u \rVert_{2}^{2}}{2\rho}    
+\end{align*}
+
+\end{frame}
+
+\begin{frame}{Algorithm}
+
+\begin{algorithm}[H]
+    \caption{ADMM} % \label{euclid}
+    \begin{algorithmic}[1]
+        \Procedure{ADMM}{}\newline
+        \textbf{Input:} $y$, $\lambda$, $\rho$, $nb\_iterations$ \\
+        \textbf{Output:} $x_{nb\_iterations}$
+        \For{\texttt{$k \in 0...nb\_iterations$}}
+            \State{$x_{k+1} = \arg\min\limits_{x} {L(x, z_{k}, u_{k})}$}
+            \State{$z_{k+1} = \arg\min\limits_{z} {L(x_{k+1}, z, u_{k})}$}
+            \State{$u_{k+1} = u_{k} + \rho (z_{k+1} - x_{k+1})$}
+        \EndFor
+        \EndProcedure
+    \end{algorithmic}
+    % \label{alg_1}
+\end{algorithm}
+\end{frame}
+
+\begin{frame}{$\hat x = \arg\min\limits_{x} {L(x, z, u)}$}
+    \begin{align*}
+        \hat x
+        &= \arg\min\limits_{x} L(x, z, u) \\
+        &= \arg\min\limits_{x} \{
+            \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(z) +
+            \frac{\rho}{2} \lVert x-z+\frac{u}{\rho} \rVert_{2}^{2} 
+            - \frac{\lVert u \rVert_{2}^{2}}{2\rho}
+        \} \\
+        &= \arg\min\limits_{x} \{
+            \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} +
+            \frac{\rho}{2} \lVert x-z+\frac{u}{\rho} \rVert_{2}^{2}
+        \} \\
+    \end{align*}
+\end{frame}
+
+\begin{frame}{$\hat x = \arg\min\limits_{x} {L(x, z, u)}$}
+    \begin{align*}
+        &\frac{d}{dx} (\frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(z) +
+        \frac{\rho}{2} \lVert x-z+\frac{u}{\rho} \rVert_{2}^{2} 
+        - \frac{\lVert u \rVert_{2}^{2}}{2\rho}) = 0 \\
+        &\iff -H^{T} (y - Hx) + \rho (x-z+\frac{u}{\rho}) = 0 \\
+        &\iff -H^{T}y + H^{T}Hx + \rho x - \rho z+ u = 0 \\
+        &\iff -H^{T}y + (H^{T}H + \rho I)x - \rho z+ u = 0 \\
+        &\iff  x = (H^{T}H + \rho I)^{-1} (H^{T}y + \rho z - u) \\
+    \end{align*}
+\end{frame}
+
+\begin{frame}{$\hat z = \arg\min\limits_{z} {L(x, z, u)}$}
+    \begin{align*}
+        \hat z
+        &= \arg\min\limits_{z} L(x, z, u) \\
+        &= \arg\min\limits_{z} \{
+            \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(z) +
+            \frac{\rho}{2} \lVert x-z+\frac{u}{\rho} \rVert_{2}^{2} 
+            - \frac{\lVert u \rVert_{2}^{2}}{2\rho}
+        \} \\
+        &= \arg\min\limits_{z} \{
+            \lambda P(z) +
+            \frac{\rho}{2} \lVert x-z+\frac{u}{\rho} \rVert_{2}^{2} 
+        \} \\
+        &= \arg\min\limits_{z} \{
+            \lambda P(z) +
+            \frac{\rho}{2} \lVert -x+z-\frac{u}{\rho} \rVert_{2}^{2} 
+        \} \\
+        &= \arg\min\limits_{z} \{
+            \lambda P(z) +
+            \frac{\rho}{2} \lVert -x+z-\frac{u}{\rho} \rVert_{2}^{2} 
+        \}
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Resolution}
+
+    \begin{algorithm}[H]
+        \caption{ADMM} % \label{euclid}
+        \begin{algorithmic}[1]
+            \Procedure{ADMM}{}\newline
+            \textbf{Input:} $y$, $\lambda$, $\rho$, $nb\_iterations$ \\
+            \textbf{Output:} $x_{nb\_iterations}$
+            \For{\texttt{$k \in 0...nb\_iterations$}}
+                \State{$x_{k+1} = (H^{T}H + \rho I)^{-1} (H^{T}y + \rho z_{k} - u_{k})$}
+                \State{$z_{k+1} = \arg\min\limits_{z} \{
+                    \lambda P(z) +
+                    \frac{\rho}{2} \lVert -x_{k+1}+z-\frac{u_{k}}{\rho} \rVert_{2}^{2} 
+                \}$}
+                \State{$u_{k+1} = u_{k} + \rho (z_{k+1} - x_{k+1})$}
+            \EndFor
+            \EndProcedure
+        \end{algorithmic}
+        % \label{alg_1}
+    \end{algorithm}
+    \end{frame}
+
+\begin{frame}{$P(x) = \lVert x \rVert_{1}$}
+
+Opérateur proximal : $\hat{x} = \arg\min\limits_{x} \{ 
+    \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
+    + \lambda {\color{red} \lVert x \rVert_{1} } 
+\}$ \\
+
+\vspace{5mm}
+
+Résolution avec l'ADMM:
+\begin{itemize}
+    \item Équation : $\min\limits_{x, z} \{ 
+        \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
+        + \lambda {\color{red} \lVert z \rVert_{1} } 
+    \}$
+    \item Contrainte : $x-z = \overrightarrow{0}$
+\end{itemize}
+
+\vspace{5mm}
+
+Lagrangien augmenté :
+
+\begin{align*}
+L(x, z, u) 
+&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda {\color{red} \lVert z \rVert_{1} }  +
+u^{T}(x-z) + \frac{\rho}{2} \lVert x-z \rVert_{2}^{2} \\
+&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda {\color{red} \lVert z \rVert_{1} }  +
+\frac{\rho}{2} \lVert x-z+\frac{u}{\rho} \rVert_{2}^{2} - \frac{\lVert u \rVert_{2}^{2}}{2\rho}    
+\end{align*}
+
+\end{frame}
+
+\begin{frame}{$P(x) = \lVert x \rVert_{2}^{2}$}
+
+Opérateur proximal : $\hat{x} = \arg \min_{x} \{ 
+    \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
+    + \lambda {\color{red} \lVert x \rVert_{2}^{2}}$ 
+\} \\
+
+\vspace{5mm}
+
+Résolution avec l'ADMM:
+\begin{itemize}
+    \item Équation : $\min_{x, z} \{ 
+        \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
+        + \lambda {\color{red} \lVert x \rVert_{2}^{2}} \}$
+    \item Contrainte : $x-z = \overrightarrow{0}$
+\end{itemize}
+
+\vspace{5mm}
+
+Lagrangien augmenté :
+\begin{align*}
+L(x, z, u)
+&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
++ \lambda {\color{red} \lVert z \rVert_{2}^{2}} +
+u^{T}(x-z) + \frac{\rho}{2} \lVert x-z \rVert_{2}^{2} \\
+&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
++ \lambda {\color{red} \lVert z \rVert_{2}^{2}} +
+\frac{\rho}{2} \lVert x-z+\frac{u}{\rho} \rVert_{2}^{2} - \frac{\lVert u \rVert_{2}^{2}}{2\rho}
+\end{align*}
+
+\end{frame}
+
+\begin{frame}{$P(x) = \lVert \nabla x \rVert_{1}$}
+
+Opérateur proximal : $\hat{x} = \arg \min_{x} \{ \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda \lVert \nabla x \rVert_{1} \}$ \\
+
+\vspace{5mm}
+
+Résolution avec l'ADMM:
+\begin{itemize}
+    \item Équation : $\min_{x, z} \{ \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda \lVert z \rVert_{1} \}$
+    \item Contrainte : $\nabla x - z = \overrightarrow{0}$
+\end{itemize}
+
+\vspace{5mm}
+
+Lagrangien augmenté :
+
+\begin{align*}
+L(x, z, u) 
+&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda \lVert z \rVert_{1} +
+u^{T}(\nabla x-z) + \frac{\rho}{2} \lVert \nabla x-z \rVert_{2}^{2} \\
+&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda \lVert z \rVert_{1} +
+\frac{\rho}{2} \lVert \nabla x-z+\frac{u}{\rho} \rVert_{2}^{2} - \frac{\lVert u \rVert_{2}^{2}}{2\rho}    
+\end{align*}
+
+\end{frame}
+
+\begin{frame}{Notation $\nabla$}
+
+\begin{align*}
+\nabla = \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}
+\end{align*}
+
+\begin{align*}
+\nabla f 
+= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix} f 
+= \begin{bmatrix} \frac{df}{dx} \\ \frac{df}{dy}
+\end{bmatrix}
+\end{align*}
+
+\begin{align*}
+\nabla^{T} f 
+= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}^T f
+= \begin{bmatrix} \frac{d}{dx} & \frac{d}{dy} \end{bmatrix} f
+= \begin{bmatrix} \frac{df}{dx} & \frac{df}{dy} \end{bmatrix}
+\end{align*}
+
+\begin{align*}
+\nabla^{T} \nabla f = \begin{bmatrix} 
+\frac{d}{dx} & \frac{d}{dy} 
+\end{bmatrix} \begin{bmatrix} 
+\frac{d}{dx} \\ 
+\frac{d}{dy} 
+\end{bmatrix} f 
+= (\frac{d^{2}}{dx^{2}} + \frac{d^{2}}{dy^{2}}) f
+= \frac{d^{2}f}{dx^{2}} + \frac{d^{2}f}{dy^{2}}
+= \Delta f
+\end{align*}
+\end{frame}
+
+\begin{frame}{Notation $\nabla$}
+
+\begin{align*}
+\nabla . v = \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix} .
+\begin{bmatrix} v_{x} \\ v_{y} \end{bmatrix}
+= \frac{dv_{x}}{dx} + \frac{dv_{y}}{dy}
+\end{align*}
+\end{frame}
+
+
+
