@@ -1,0 +1,109 @@
+\subsection{Algorithm}
+
+\frame{
+    \tableofcontents[ 
+        currentsubsection, 
+        % hideothersubsections,
+        % sectionstyle=show/hide,
+        % subsectionstyle=show/shaded,
+    ]
+}
+
+\begin{frame}{Algorithm}
+\begin{algorithm}[H]
+    \caption{ADMM} % \label{euclid}
+    \begin{algorithmic}[1]
+        \Procedure{ADMM}{}\newline
+        \textbf{Input:} $y$, $\lambda$, $\rho$, $nb\_iterations$ \\
+        \textbf{Output:} $x_{nb\_iterations}$
+        \For{\texttt{$k \in 0...nb\_iterations$}}
+            \State{$x_{k+1} = \arg\min\limits_{x} {L(x_{k}, z_{k}, u_{k})}$}
+            \State{$z_{k+1} = \arg\min\limits_{z} {L(x_{k+1}, z, u_{k})}$}
+            \State{$u_{k+1} = u_{k} + \rho (z_{k+1} - x_{k+1})$}
+        \EndFor
+        \EndProcedure
+    \end{algorithmic}
+    % \label{alg_1}
+\end{algorithm}
+\end{frame}
+
+% \begin{frame}{Algorithm General}
+% \begin{algorithm}[H]
+%     \caption{ADMM} % \label{euclid}
+%     \begin{algorithmic}[1]
+%         \Procedure{ADMM}{}\newline
+%         \textbf{Input:} $g$, $\lambda$, $\rho$, $nb\_iterations$ \\
+%         \textbf{Output:} $f_{nb\_iterations}$
+%         \For{\texttt{$k \in 0...nb\_iterations$}}
+%             \State{$f_{k+1} = \arg\min\limits_{f} {L(f_{k}, z_{k}, u_{k})}$}
+%             \State{$z_{k+1} = \arg\min\limits_{z} {L(f_{k+1}, z, u_{k})}$}
+%             \State{$u_{k+1} = u_{k} + \rho (z_{k+1} - f_{k+1})$}
+%         \EndFor
+%         \EndProcedure
+%     \end{algorithmic}
+%     % \label{alg_1}
+% \end{algorithm}
+% \end{frame}
+
+% \begin{frame}{$\arg\min\limits_{f} {L(f, z, u)}$}
+% \begin{align*}
+% &\frac{d}{df} \{
+%     \frac{1}{2} \lVert g - Hf \rVert_{2}^{2} 
+%     + \lambda R(z) 
+%     + \frac{\rho}{2} \lVert f-z+\frac{u}{\rho} \rVert_{2}^{2} 
+%     - \frac{\lVert u \rVert_{2}^{2}}{2\rho}
+% \} = 0 \\
+% &\iff -H^{T} (g - Hf) + \rho (f-z+\frac{u}{\rho}) = 0 \\
+% &\iff -H^{T}g + H^{T} H f + \rho f - \rho z + u = 0 \\
+% &\iff -H^{T}g + (H^{T}H + \rho I)x - \rho z + u = 0 \\
+% &\iff (H^{T}H + \rho I)f = H^{T}y + \rho z - u\\
+% &\iff f = (H^{T}H + \rho I)^{-1} (H^{T}g + \rho z - u) \\
+% \end{align*}
+% \end{frame}
+
+% \begin{frame}{$\arg\min\limits_{z} {L(f, z, u)}$}
+% \begin{align*}
+% \hat z
+% &= \arg\min\limits_{z} L(f, z, u) \\
+% &= \arg\min\limits_{z} \{
+%     \frac{1}{2} \lVert g - Hf \rVert_{2}^{2} + \lambda R(z) +
+%     \frac{\rho}{2} \lVert f-z+\frac{u}{\rho} \rVert_{2}^{2} 
+%     - \frac{\lVert u \rVert_{2}^{2}}{2\rho}
+% \} \\
+% &= \arg\min\limits_{z} \{
+%     \lambda R(z) +
+%     \frac{\rho}{2} \lVert f-z+\frac{u}{\rho} \rVert_{2}^{2} 
+% \} \\
+% &= \arg\min\limits_{z} \{
+%     \lambda R(z) +
+%     \frac{\rho}{2} \lVert z - ( x + \frac{u}{\rho}) \rVert_{2}^{2}
+% \} \\
+% % &= \arg\min\limits_{z} \{
+% %     \lambda R(z) +
+% %     \frac{\rho}{2} \lVert -x+z-\frac{u}{\rho} \rVert_{2}^{2} 
+% % \}
+% \end{align*}
+% \end{frame}
+
+% \begin{frame}{Algorithm}
+% \begin{algorithm}[H]
+% \caption{ADMM} % \label{euclid}
+% \begin{algorithmic}[1]
+%     \Procedure{ADMM}{}\newline
+%     \textbf{Input:} $y$, $\lambda$, $\rho$, $nb\_iterations$ \\
+%     \textbf{Output:} $x_{nb\_iterations}$
+%     \For{\texttt{$k \in 0...nb\_iterations$}}
+%         \State{$f_{k+1} = (H^{T}H + \rho I)^{-1} (\rho z - u - H^{T}g)$}
+%         \State{$z_{k+1} = \arg\min\limits_{z} \{
+%                 \lambda R(z) +
+%                 \frac{\rho}{2} 
+%                 \lVert z - ( x + \frac{u}{\rho}) \rVert_{2}^{2}
+%             \}$
+%         }
+%         \State{$u_{k+1} = u_{k} + \rho (z_{k+1} - f_{k+1})$}
+%     \EndFor
+%     \EndProcedure
+% \end{algorithmic}
+% % \label{alg_1}
+% \end{algorithm}
+% \end{frame}

@@ -1,0 +1,185 @@
+\subsection{Norm $L_{1} : R(x) = \lVert x \rVert_{1}$}
+
+\frame{
+    \tableofcontents[ 
+        currentsubsection, 
+        % hideothersubsections,
+        % sectionstyle=show/hide,
+        % subsectionstyle=show/shaded,
+    ]
+}
+
+\begin{frame}{$R(x) = \lVert x \rVert_{1}$}
+
+Résolution avec l'ADMM:
+\begin{itemize}
+    \item Équation : $\min\limits_{x, z} \{ 
+        \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
+        + \lambda \lVert z \rVert_{1} 
+    \}$
+    \item Contrainte : $x = z$
+\end{itemize}
+
+\vspace{5mm}
+
+Lagrangien augmenté :
+
+\begin{align*}
+L(x, z, u) 
+&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
++ \lambda \lVert z \rVert_{1} 
++ u^{T}(x-z) + \frac{\rho}{2} \lVert x-z \rVert_{2}^{2} \\
+&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
++ \lambda \lVert z \rVert_{1}
++ \frac{\rho}{2} \lVert x - z + \frac{u}{\rho} \rVert_{2}^{2} 
+- \frac{\lVert u \rVert_{2}^{2}}{2\rho}    
+\end{align*}
+
+\end{frame}
+
+\begin{frame}{$\arg\min\limits_{x} {L(x, z, u)}$}
+\begin{align*}
+&\frac{d}{dx} \{
+    \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
+    + \lambda \lVert z \rVert_{1} 
+    + \frac{\rho}{2} \lVert x - z + \frac{u}{\rho} \rVert_{2}^{2} 
+    - \frac{\lVert u \rVert_{2}^{2}}{2\rho}
+\} = 0 \\
+&\iff -H^{T} (y - Hx) + \rho (x - z + \frac{u}{\rho}) = 0 \\
+&\iff -H^{T} y + H^{T} H x + \rho x - \rho z + u = 0 \\
+&\iff -H^{T} y + (H^{T}H + \rho I) x - \rho z + u = 0 \\
+&\iff (H^{T}H + \rho I) x = H^{T}y + \rho z - u\\
+&\iff x = (H^{T}H + \rho I)^{-1} (H^{T} y + \rho z - u) \\
+\end{align*}
+\end{frame}
+
+\begin{frame}{$\arg\min\limits_{z} {L(x, z, u)}$}
+\begin{align*}
+&\frac{d}{dz} \{
+    \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
+    + \lambda \lVert z \rVert_{1} 
+    + \frac{\rho}{2} \lVert x - z + \frac{u}{\rho} \rVert_{2}^{2} 
+    - \frac{\lVert u \rVert_{2}^{2}}{2\rho}
+\} = 0 \\
+&\iff \lambda sign(z) + \rho (x - z + \frac{u}{\rho})  = 0 \\
+&\iff \lambda sign(z) + \rho x - \rho z + u  = 0 \\
+&\iff -\lambda sign(z) + \rho z  = \rho x + u \\
+&\iff  z - \frac{\lambda}{\rho} sign(z) = x + \frac{u}{\rho} \\
+&\iff  z = sign(x + \frac{u}{\rho}) 
+\times max(|x + \frac{u}{\rho}| 
+- \frac{\lambda}{\rho}, 0) \\
+&\iff  z = Soft_{\frac{\lambda}{\rho}}(x + \frac{u}{\rho})
+\end{align*}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{algorithm}[H]
+    \caption{ADMM} % \label{euclid}
+    \begin{algorithmic}[1]
+        \Procedure{ADMM}{}\newline
+        \textbf{Input:} $y$, $\lambda$, $\rho$, $nb\_iterations$ \\
+        \textbf{Output:} $x_{nb\_iterations}$
+        \For{\texttt{$k \in 0...nb\_iterations$}}
+            \State{$x_{k+1} = (H^{T}H + \rho I)^{-1} (H^{T} y_{k} + \rho z_{k} - u_{k})$}
+            \State{$z_{k+1} = Soft_{\frac{\lambda}{\rho}}(x_{k+1} + \frac{u_{k}}{\rho})$}
+            \State{$u_{k+1} = u_{k} + \rho (z_{k+1} - x_{k+1})$}
+        \EndFor
+        \EndProcedure
+    \end{algorithmic}
+    % \label{alg_1}
+\end{algorithm}
+\end{frame}
+
+% \begin{frame}{$\arg\min\limits_{z} {L(x, z, u)}$}
+% \begin{align*}
+% &\frac{d}{dz} \{
+%     \lambda \lVert z \rVert_{1}  +
+%     \frac{\rho}{2} \lVert z - ( f + \frac{u}{\rho}) \rVert_{2}^{2}
+% \} = 0 \\
+% &\iff \lambda sign(z) z + \rho (z - ( f + \frac{u}{\rho})) = 0 \\
+% % &\iff \lambda sign(z) + \rho z - \rho f + u = 0 \\
+% &\iff \frac{\lambda}{\rho} sign(z) z + z - ( f + \frac{u}{\rho}) = 0 \\
+% &\iff (\frac{\lambda}{\rho} sign(z) + 1) z - ( f + \frac{u}{\rho}) = 0 \\
+% &\iff  z = ( f + \frac{u}{\rho}) - \frac{\lambda}{\rho} sign(z) \\
+% &\iff  z = sign(z) \times max(|f + \frac{u}{\rho}| - \frac{\lambda}{\rho}, 0) \\
+% &\iff  z = sign(z) \times max(|f| - \frac{\lambda}{\rho}, 0) \\
+% % &\iff H^{T}g - H^{T} H f + \rho f - \rho z + u = 0 \\
+% % &\iff H^{T}g + (H^{T}H + \rho I)x - \rho z + u = 0 \\
+% % &\iff (H^{T}H + \rho I)f = \rho z - u - H^{T}y \\
+% % &\iff f = (H^{T}H + \rho I)^{-1} (\rho z - u - H^{T}g) \\
+% \end{align*}
+% \end{frame}
+
+% \begin{frame}{$R(f) = \lVert f \rVert_{1}$}
+
+% Opérateur proximal : $\hat{f} = \arg\min\limits_{f} \{ 
+%     \frac{1}{2} \lVert g - Hf \rVert_{2}^{2} 
+%     + \lambda \lVert f \rVert_{1}
+% \}$ \\
+
+% \vspace{5mm}
+
+% Résolution avec l'ADMM:
+% \begin{itemize}
+%     \item Équation : $\min\limits_{f, z} \{ 
+%         \frac{1}{2} \lVert g - Hf \rVert_{2}^{2} 
+%         + \lambda \lVert z \rVert_{1} 
+%     \}$
+%     \item Contrainte : $f = z$
+% \end{itemize}
+
+% \vspace{5mm}
+
+% Lagrangien augmenté :
+
+% \begin{align*}
+% L(f, z, u) 
+% &= \frac{1}{2} \lVert g - Hf \rVert_{2}^{2} 
+% + \lambda \lVert z \rVert_{1} 
+% + u^{T}(f-z) + \frac{\rho}{2} \lVert f-z \rVert_{2}^{2} \\
+% &= \frac{1}{2} \lVert g - Hf \rVert_{2}^{2} 
+% + \lambda \lVert z \rVert_{1}
+% + \frac{\rho}{2} \lVert f - z + \frac{u}{\rho} \rVert_{2}^{2} 
+% - \frac{\lVert u \rVert_{2}^{2}}{2\rho}    
+% \end{align*}
+
+% \end{frame}
+
+% \begin{frame}{$\arg\min\limits_{z} {L(f, z, u)}$}
+% \begin{align*}
+% \hat z
+% &= \arg\min\limits_{z} L(f, z, u) \\
+% &= \arg\min\limits_{z} \{
+%     \lambda \lVert z \rVert_{1}  +
+%     \frac{\rho}{2} \lVert z - ( x + \frac{u}{\rho}) \rVert_{2}^{2}
+% \} \\
+% % &= \arg\min\limits_{z} \{
+% %     \lambda R(z) +
+% %     \frac{\rho}{2} \lVert -x+z-\frac{u}{\rho} \rVert_{2}^{2} 
+% % \}
+% \end{align*}
+% \end{frame}
+
+% \begin{frame}{$\arg\min\limits_{z} {L(f, z, u)}$}
+% \begin{align*}
+% &\frac{d}{dz} \{
+%     \lambda \lVert z \rVert_{1}  +
+%     \frac{\rho}{2} \lVert z - ( f + \frac{u}{\rho}) \rVert_{2}^{2}
+% \} = 0 \\
+% &\iff \lambda sign(z) z + \rho (z - ( f + \frac{u}{\rho})) = 0 \\
+% % &\iff \lambda sign(z) + \rho z - \rho f + u = 0 \\
+% &\iff \frac{\lambda}{\rho} sign(z) z + z - ( f + \frac{u}{\rho}) = 0 \\
+% &\iff (\frac{\lambda}{\rho} sign(z) + 1) z - ( f + \frac{u}{\rho}) = 0 \\
+% &\iff  z = ( f + \frac{u}{\rho}) - \frac{\lambda}{\rho} sign(z) \\
+% &\iff  z = sign(z) \times max(|f + \frac{u}{\rho}| - \frac{\lambda}{\rho}, 0) \\
+% &\iff  z = sign(z) \times max(|f| - \frac{\lambda}{\rho}, 0) \\
+% % &\iff H^{T}g - H^{T} H f + \rho f - \rho z + u = 0 \\
+% % &\iff H^{T}g + (H^{T}H + \rho I)x - \rho z + u = 0 \\
+% % &\iff (H^{T}H + \rho I)f = \rho z - u - H^{T}y \\
+% % &\iff f = (H^{T}H + \rho I)^{-1} (\rho z - u - H^{T}g) \\
+% \end{align*}
+% \end{frame}
+    
+    
+    
+    

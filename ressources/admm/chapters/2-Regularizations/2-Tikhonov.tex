@@ -1,0 +1,29 @@
+\subsection{Tikhonov : $R(x) = \lVert x \rVert_{2}^{2}$}
+
+\frame{
+    \tableofcontents[ 
+        currentsubsection, 
+        % hideothersubsections,
+        % sectionstyle=show/hide,
+        % subsectionstyle=show/shaded,
+    ]
+}
+
+\begin{frame}{$R(x) = \lVert x \rVert_{2}^{2}$}
+
+\begin{align*}
+&\hat{x} = \arg\min\limits_{x} \{ 
+    \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
+    + \lambda \lVert x \rVert_{2}^{2}
+\} \\
+&\frac{d}{dx} \{
+    \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
+    + \lambda \lVert x \rVert_{2}^{2}
+\} = 0 \\
+&\iff - H^{T} (y - Hx) + 2\lambda x = 0 \\
+&\iff - H^{T} y + H^{T}Hx + 2\lambda x = 0 \\
+&\iff - H^{T} y + (H^{T}H + 2\lambda I) x = 0 \\
+&\iff x = (H^{T}H + 2\lambda I)^{-1} H^{T} y \\
+\end{align*}
+
+\end{frame}

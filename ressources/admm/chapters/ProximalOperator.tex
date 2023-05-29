@@ -118,15 +118,28 @@ u^{T}(x-z) + \frac{\rho}{2} \lVert x-z \rVert_{2}^{2} \\
     \end{align*}
 \end{frame}
 
+% \begin{frame}{$\hat x = \arg\min\limits_{x} {L(x, z, u)}$}
+%     \begin{align*}
+%         &\frac{d}{dx} (\frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(z) +
+%         \frac{\rho}{2} \lVert x-z+\frac{u}{\rho} \rVert_{2}^{2} 
+%         - \frac{\lVert u \rVert_{2}^{2}}{2\rho}) = 0 \\
+%         &\iff -H^{T} (y - Hx) + \rho (x-z+\frac{u}{\rho}) = 0 \\
+%         &\iff -H^{T}y + H^{T}Hx + \rho x - \rho z+ u = 0 \\
+%         &\iff -H^{T}y + (H^{T}H + \rho I)x - \rho z+ u = 0 \\
+%         &\iff  x = (H^{T}H + \rho I)^{-1} (H^{T}y + \rho z - u) \\
+%     \end{align*}
+% \end{frame}
+
 \begin{frame}{$\hat x = \arg\min\limits_{x} {L(x, z, u)}$}
     \begin{align*}
         &\frac{d}{dx} (\frac{1}{2} \lVert y - Hx \rVert_{2}^{2} + \lambda P(z) +
         \frac{\rho}{2} \lVert x-z+\frac{u}{\rho} \rVert_{2}^{2} 
         - \frac{\lVert u \rVert_{2}^{2}}{2\rho}) = 0 \\
-        &\iff -H^{T} (y - Hx) + \rho (x-z+\frac{u}{\rho}) = 0 \\
-        &\iff -H^{T}y + H^{T}Hx + \rho x - \rho z+ u = 0 \\
-        &\iff -H^{T}y + (H^{T}H + \rho I)x - \rho z+ u = 0 \\
-        &\iff  x = (H^{T}H + \rho I)^{-1} (H^{T}y + \rho z - u) \\
+        &\iff H^{T} (y - Hx) + \rho (x-z+\frac{u}{\rho}) = 0 \\
+        &\iff H^{T}y - H^{T}Hx + \rho x - \rho z+ u = 0 \\
+        &\iff H^{T}y + (H^{T}H + \rho I)x - \rho z+ u = 0 \\
+        &\iff (H^{T}H + \rho I)x = \rho z - u - H^{T}y \\
+        &\iff x = (H^{T}H + \rho I)^{-1} (\rho z - u - H^{T}y) \\
     \end{align*}
 \end{frame}
 
@@ -156,25 +169,25 @@ u^{T}(x-z) + \frac{\rho}{2} \lVert x-z \rVert_{2}^{2} \\
 
 \begin{frame}{Resolution}
 
-    \begin{algorithm}[H]
-        \caption{ADMM} % \label{euclid}
-        \begin{algorithmic}[1]
-            \Procedure{ADMM}{}\newline
-            \textbf{Input:} $y$, $\lambda$, $\rho$, $nb\_iterations$ \\
-            \textbf{Output:} $x_{nb\_iterations}$
-            \For{\texttt{$k \in 0...nb\_iterations$}}
-                \State{$x_{k+1} = (H^{T}H + \rho I)^{-1} (H^{T}y + \rho z_{k} - u_{k})$}
-                \State{$z_{k+1} = \arg\min\limits_{z} \{
-                    \lambda P(z) +
-                    \frac{\rho}{2} \lVert -x_{k+1}+z-\frac{u_{k}}{\rho} \rVert_{2}^{2} 
-                \}$}
-                \State{$u_{k+1} = u_{k} + \rho (z_{k+1} - x_{k+1})$}
-            \EndFor
-            \EndProcedure
-        \end{algorithmic}
-        % \label{alg_1}
-    \end{algorithm}
-    \end{frame}
+\begin{algorithm}[H]
+    \caption{ADMM} % \label{euclid}
+    \begin{algorithmic}[1]
+        \Procedure{ADMM}{}\newline
+        \textbf{Input:} $y$, $\lambda$, $\rho$, $nb\_iterations$ \\
+        \textbf{Output:} $x_{nb\_iterations}$
+        \For{\texttt{$k \in 0...nb\_iterations$}}
+            \State{$x_{k+1} = (H^{T}H + \rho I)^{-1} (H^{T}y + \rho z_{k} - u_{k})$}
+            \State{$z_{k+1} = \arg\min\limits_{z} \{
+                \lambda P(z) +
+                \frac{\rho}{2} \lVert -x_{k+1}+z-\frac{u_{k}}{\rho} \rVert_{2}^{2} 
+            \}$}
+            \State{$u_{k+1} = u_{k} + \rho (z_{k+1} - x_{k+1})$}
+        \EndFor
+        \EndProcedure
+    \end{algorithmic}
+    % \label{alg_1}
+\end{algorithm}
+\end{frame}
 
 \begin{frame}{$P(x) = \lVert x \rVert_{1}$}
 

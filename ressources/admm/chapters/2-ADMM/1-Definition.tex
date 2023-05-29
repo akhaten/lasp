@@ -1,0 +1,65 @@
+\subsection{Definition}
+
+\frame{
+    \tableofcontents[ 
+        currentsubsection, 
+        % hideothersubsections,
+        % sectionstyle=show/hide,
+        % subsectionstyle=show/shaded,
+    ]
+}
+
+
+\begin{frame}{Definition}
+
+Résolution avec l'ADMM:
+\begin{itemize}
+    \item Équation : $\min\limits_{x, z} \{ f(x) + g(z) \}$
+    \item Contrainte : $Ax + Bz = c$
+\end{itemize}
+
+\vspace{5mm}
+
+Lagrangien augmenté :
+
+\begin{align*}
+L(x, z, u) 
+&= f(x) + g(z) + u^{T}(Ax + Bz - c) 
++ \frac{\rho}{2} \lVert Ax + Bz - c \rVert_{2}^{2} \\
+&= f(x) + g(z)
++ \frac{\rho}{2} \lVert Ax + Bz - c + \frac{u}{\rho} \rVert_{2}^{2}
+- \frac{\lVert u \rVert_{2}^{2}}{2\rho} \\
+\end{align*}
+
+\end{frame}
+
+% \begin{frame}{Débruitage avec un à priori R(f)}
+
+% Opérateur proximal : 
+% $\hat{f} = \arg\min\limits_{f} \{ 
+%     \frac{1}{2} \lVert g - Hf \rVert_{2}^{2} + \lambda R(f)$ 
+% \} \\
+
+% \vspace{5mm}
+
+% Résolution avec l'ADMM:
+% \begin{itemize}
+%     \item Équation : $\min\limits_{f, z} \{ 
+%         \frac{1}{2} \lVert g - Hf \rVert_{2}^{2} + \lambda P(z) 
+%     \}$
+%     \item Contrainte : ...
+% \end{itemize}
+
+% \vspace{5mm}
+
+% Lagrangien augmenté :
+
+% \begin{align*}
+% L(f, z, u) 
+% &= \frac{1}{2} \lVert g - Hf \rVert_{2}^{2} + \lambda R(z) +
+% u^{T}(x-z) + \frac{\rho}{2} \lVert f-z \rVert_{2}^{2} \\
+% &= \frac{1}{2} \lVert g - Hf \rVert_{2}^{2} + \lambda R(z) +
+% \frac{\rho}{2} \lVert f-z+\frac{u}{\rho} \rVert_{2}^{2} - \frac{\lVert u \rVert_{2}^{2}}{2\rho}    
+% \end{align*}
+
+% \end{frame}
