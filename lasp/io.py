@@ -15,6 +15,16 @@ def read(image_path: pathlib.Path) -> numpy.ndarray:
 
     return image
 
+def save(img: numpy.ndarray, image_path: pathlib.Path) -> None:
+    
+    ext = image_path.suffix
+
+    if ext == '.npy':
+        with open(image_path) as f:
+            numpy.save(f, img)
+    else:
+        matplotlib.pyplot.imsave(image_path, img, cmap='gray')
+
 
 # def plot_images(grid: numpy.ndarray, titles: numpy.ndarray, cmap: str) -> None:
     

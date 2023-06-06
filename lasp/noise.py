@@ -6,9 +6,14 @@ import lasp.metrics
 
 def additive_white_gaussian_noise(signal: numpy.ndarray, snr: float) -> numpy.ndarray:
     
-    """Additive White Gaussian Noise (awgn)
-        signal: signal
-        snr : signal to noise ratio (not in db)
+    """Additive White Gaussian Noise (AWGN)
+    
+    Params:
+        - signal: signal
+        - snr : signal to noise ratio (not in db)
+
+    Returns:
+        Signal noised
     """
 
     # if signal.dtype == numpy.complex64:
@@ -31,6 +36,15 @@ def additive_white_gaussian_noise(signal: numpy.ndarray, snr: float) -> numpy.nd
 
 def multiplicative_noise(signal: numpy.ndarray, snr: float) -> numpy.ndarray:
 
+    """Multiplicative Noise
+    
+    Params:
+        - signal: signal
+        - snr : signal to noise ratio (not in db)
+
+    Returns:
+        Signal noised
+    """
     # TODO: TEST
 
     signal_power = lasp.metrics.power(signal)

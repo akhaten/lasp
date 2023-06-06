@@ -1,6 +1,8 @@
 import numpy
 
 def mean_absolute_error(signal_1: numpy.ndarray, signal_2: numpy.ndarray) -> float:
+    """ Mean Absolute Error (MAE)
+    """
     n = signal_1.shape[0] * signal_1.shape[1]
     # | signal_1[i] - signal_2[i] |
     tmp = numpy.abs(signal_1 - signal_2)
@@ -12,6 +14,8 @@ def mean_absolute_error(signal_1: numpy.ndarray, signal_2: numpy.ndarray) -> flo
 
 
 def mean_squared_error(signal_1: numpy.ndarray, signal_2: numpy.ndarray) -> float:
+    """ Mean Squared Error (MSE)
+    """
     n = signal_1.shape[0] * signal_1.shape[1]
     # signal_1[i] - signal_2[i]
     tmp = numpy.power(signal_1 - signal_2, 2)
@@ -24,11 +28,15 @@ def mean_squared_error(signal_1: numpy.ndarray, signal_2: numpy.ndarray) -> floa
     return res
 
 def peak_signal_to_noise_ratio(signal_1: numpy.ndarray, signal_2: numpy.ndarray) -> float:
+    """ Peak Signal to Noise Ratio (PSNR)
+    """
     intensity_max = numpy.max(signal_1)
     mse = mean_squared_error(signal_1, signal_2)
     return 10 * numpy.log10( (intensity_max**2) / mse )
 
 def power(signal: numpy.ndarray) -> float:
+    """Power of signal
+    """
     # nb_value = numpy.prod(numpy.array(signal.shape))
     # sum = numpy.sum(numpy.power(signal, 2))
     # return sum / nb_value

@@ -9,172 +9,354 @@
     ]
 }
 
-\begin{frame}{Remarques sur la notation $\nabla$ (gradient)}
-
-% \begin{align*}
-% \nabla 
-% = \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}
-% = \begin{bmatrix} \nabla_{x} \\ \nabla_{y} \end{bmatrix}
-% \end{align*}
-
+\begin{frame}{Problème de minimisation}
 \begin{align*}
-\nabla 
-&= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}
-= \begin{bmatrix} \nabla_{x} \\ \nabla_{y} \end{bmatrix} \\
-\nabla^{T}
-&= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}^{T}
-= \begin{bmatrix} \frac{d}{dx} & \frac{d}{dy} \end{bmatrix} \\
-&= \begin{bmatrix} \nabla_{x} \\ \nabla_{y} \end{bmatrix}^{T}
-= \begin{bmatrix} \nabla_{x}^{T} & \nabla_{y}^{T} \end{bmatrix} 
-\text{(Transpose of block matrix)} \\
-\nabla f 
-&= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix} f 
-= \begin{bmatrix} \frac{df}{dx} \\ \frac{df}{dy} \end{bmatrix}
-= \begin{bmatrix} \nabla_{x}f \\ \nabla_{y}f \end{bmatrix}
+\hat{f} = \arg\min\limits_{f} \{
+    \frac{1}{2} 
+    \lVert g - Hf \rVert_{2}^{2}
+    + \lambda \lVert \nabla f \rVert_{1}
+\} 
 \end{align*}
-
-
 \end{frame}
 
-\begin{frame}{Remarques sur la notation $\Delta$ (Laplacien)}
+\begin{frame}{Réécriture de $\lVert \nabla f \rVert_{1}$}
 
+En posant, \\
 \begin{align*}
-\nabla^{T} \nabla &= \begin{bmatrix} 
-\frac{d}{dx} \\ 
-\frac{d}{dy} 
-\end{bmatrix}^{T}
-\begin{bmatrix} 
-\frac{d}{dx} \\ 
-\frac{d}{dy} 
-\end{bmatrix}
-= \begin{bmatrix} 
-\frac{d}{dx} & \frac{d}{dy} 
-\end{bmatrix} \begin{bmatrix} 
-\frac{d}{dx} \\ 
-\frac{d}{dy} 
-\end{bmatrix}
-= \frac{d^{2}}{dx^{2}} + \frac{d^{2}}{dy^{2}}
-= \Delta \\
-&= \begin{bmatrix} 
-\nabla_{x} \\ 
-\nabla_{y} 
-\end{bmatrix}^{T}
-\begin{bmatrix} 
-\nabla_{x} \\ 
-\nabla_{y} 
-\end{bmatrix}
-= \begin{bmatrix} 
-\nabla_{x}^{T} & \nabla_{y}^{T}
-\end{bmatrix} \begin{bmatrix} 
-\nabla_{x} \\ 
-\nabla_{y} 
-\end{bmatrix}
-= \nabla_{x}^{T} \nabla_{x} + \nabla_{y}^{T} \nabla_{y}
-= \Delta \\
+\begin{dcases*}
+d_x = \nabla_{x}f = \frac{df}{dx} \\
+d_y = \nabla_{y}f = \frac{df}{dy} \\
+\lVert \nabla f \rVert_{1}
+= \lVert (d_x, d_y) \rVert_{1}
+= \sum\limits_{i} \sqrt{(d_x)_{i}^{2} + (d_y)_{i}^{2}} \\
+\end{dcases*}
+\end{align*}
+
+nous avons: \\
+\begin{align*}
+\hat{f} = \arg\min\limits_{f} \{
+    \frac{1}{2} 
+    \lVert g - Hf \rVert_{2}^{2}
+    + \lambda \lVert (d_x, d_y) \rVert_{1}
+\} 
 \end{align*}
 
 \end{frame}
 
-\begin{frame}{$R(x) = \lVert \nabla x \rVert_{1}$}
-
-Résolution avec l'ADMM:
-\begin{itemize}
-    \item Équation : $\min\limits_{x, z} \{ 
-        \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
-        + \lambda \lVert z \rVert_{1} 
-    \}$
-    \item Contrainte : $\nabla x = (d_{x}, d_{y}) = z 
-    \iff (d_x = z_x)$ and $(d_y = z_y)$
-\end{itemize}
-    
-Lagrangien augmenté :
-
-\resizebox{1\linewidth}{!}{
+\begin{frame}{Réécriture de $\lVert \nabla f \rVert_{1}$ (Relaxation)}
+   
+nous avons, \\
+\resizebox{1.0\linewidth}{!}{
 \begin{minipage}{\linewidth}
 \begin{align*}
-L(x, z, u) 
-&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
-+ \lambda \lVert z \rVert_{1} +
-u^{T}(\nabla x - z) 
-+ \frac{\rho}{2} \lVert \nabla x - z \rVert_{2}^{2} \\
-&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
-+ \lambda \lVert z \rVert_{1} +
-\frac{\rho}{2} \lVert \nabla x - z + \frac{u}{\rho} \rVert_{2}^{2} 
-- \frac{\lVert u \rVert_{2}^{2}}{2\rho} \\
-&= \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
-+ \lambda \lVert (d_x, d_y) \rVert_{1} +
-\frac{\rho}{2} \lVert d_x - z_x + \frac{u_x}{\rho} \rVert_{2}^{2} 
-- \frac{\lVert u_x \rVert_{2}^{2}}{2\rho}
-+ \frac{\rho}{2} \lVert d_y - z_y + \frac{u_y}{\rho} \rVert_{2}^{2} 
-- \frac{\lVert u_y \rVert_{2}^{2}}{2\rho}
+(f, d_{x}, d_{y}) = \arg\min\limits_{f, d_x, d_y} \{
+\frac{1}{2} 
+\lVert g - Hf \rVert_{2}^{2}
++ \lambda \lVert (d_{x}, d_{y}) \rVert_{1}
++ \frac{\sigma}{2} \lVert d_{x} - \nabla_{x}f \rVert_{2}^{2}
++ \frac{\sigma}{2} \lVert d_{y} - \nabla_{y}f \rVert_{2}^{2}
+\}
 \end{align*}
 \end{minipage}
 }
 
 \end{frame}
 
-\begin{frame}{$\arg\min\limits_{x} {L(x, z, u)}$}
+\begin{frame}{Introduction du processus itératif}
+
+\resizebox{1.0\linewidth}{!}{
+\begin{minipage}{\linewidth}
 \begin{align*}
-&\frac{d}{dx} \{
-    \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
-    + \lambda \lVert z \rVert_{1} +
-    \frac{\rho}{2} \lVert \nabla x - z + \frac{u}{\rho} \rVert_{2}^{2} 
-    - \frac{\lVert u \rVert_{2}^{2}}{2\rho} 
-\} = 0 \\
-&\iff -H^{T} (y - Hx) + \rho \nabla^{T} (\nabla x - z + \frac{u}{\rho}) = 0 \\
-&\iff -H^{T} (y - Hx) 
-+ \rho \nabla^{T} \nabla x 
-- \rho \nabla^{T} z 
-+ \rho \nabla^{T} u = 0 \\
-&\iff -H^{T} y +  H^{T}H x 
-+ \rho \nabla^{T} \nabla x 
-- \rho \nabla^{T} z 
-+ \rho \nabla^{T} u = 0 \\
-&\iff -H^{T} y 
-+  (H^{T}H + \rho \nabla^{T} \nabla) x 
-- \rho \nabla^{T} z 
-+ \rho \nabla^{T} u = 0 \\
-&\iff
-(H^{T}H + \rho \nabla^{T} \nabla) x 
-= H^{T} y  + \rho \nabla^{T} z - \rho \nabla^{T} u\\
-&\iff x = (H^{T}H + \rho \nabla^{T} \nabla)^{-1} 
-(H^{T} y  + \rho \nabla^{T} z - \rho \nabla^{T} u)\\
+(f^{k+1}, d^{k+1}_{x}, d^{k+1}_{y}) = \arg\min\limits_{f, d_x, d_y} \{
+\frac{1}{2} 
+\lVert g - Hf^{k} \rVert_{2}^{2}
+\lambda \lVert (d^{k}_{x}, d^{k}_{y}) \rVert_{1}
++ \frac{\sigma}{2} \lVert d^{k}_{x} - \nabla_{x}f^{k} - b^{k}_{x} \rVert_{2}^{2}
++ \frac{\sigma}{2} \lVert d^{k}_{y} - \nabla_{y}f^{k} - b^{k}_{y} \rVert_{2}^{2}
+\}
 \end{align*}
+\end{minipage}
+}
+
+\vspace{1cm}
+Avec,
+\begin{align*}
+\begin{dcases*}
+b_{x}^{k+1} = b_{x}^{k} + (\nabla_{x}f^{k+1} - d_{x}^{k+1}) \\
+b_{y}^{k+1} = b_{y}^{k} + (\nabla_{y}f^{k+1} - d_{y}^{k+1}) \\
+\end{dcases*}
+\end{align*}
+
 \end{frame}
 
-\begin{frame}{$\arg\min\limits_{z} {L(x, z, u)}$}
-\begin{align*}
-&\frac{d}{dz} \{
-    \frac{1}{2} \lVert y - Hx \rVert_{2}^{2} 
-    + \lambda \lVert z \rVert_{1} 
-    + \frac{\rho}{2} \lVert x - z + \frac{u}{\rho} \rVert_{2}^{2} 
-    - \frac{\lVert u \rVert_{2}^{2}}{2\rho}
-\} = 0 \\
-&\iff \lambda sign(z) + \rho (x - z + \frac{u}{\rho})  = 0 \\
-&\iff \lambda sign(z) + \rho x - \rho z + u  = 0 \\
-&\iff -\lambda sign(z) + \rho z  = \rho x + u \\
-&\iff  z - \frac{\lambda}{\rho} sign(z) = x + \frac{u}{\rho} \\
-&\iff  z = sign(x + \frac{u}{\rho}) 
-\times max(|x + \frac{u}{\rho}| 
-- \frac{\lambda}{\rho}, 0) \\
-&\iff  z = Soft_{\frac{\lambda}{\rho}}(x + \frac{u}{\rho})
-\end{align*}
+\begin{frame}{Division en deux sous-problème}
+\begin{enumerate}
+    \item Calcul de $f$
+    \item Calcul de $(d_x, d_y)$
+\end{enumerate}
+
 \end{frame}
 
-\begin{frame}{Algorithm}
-\begin{algorithm}[H]
-    \caption{ADMM} % \label{euclid}
-    \begin{algorithmic}[1]
-        \Procedure{ADMM}{}\newline
-        \textbf{Input:} $y$, $\lambda$, $\rho$, $nb\_iterations$ \\
-        \textbf{Output:} $x_{nb\_iterations}$
-        \For{\texttt{$k \in 0...nb\_iterations$}}
-            \State{$x_{k+1} = (H^{T}H + \rho I)^{-1} (H^{T} y_{k} + \rho z_{k} - u_{k})$}
-            \State{$z_{k+1} = Soft_{\frac{\lambda}{\rho}}(x_{k+1} + \frac{u_{k}}{\rho})$}
-            \State{$u_{k+1} = u_{k} + \rho (z_{k+1} - x_{k+1})$}
-        \EndFor
-        \EndProcedure
-    \end{algorithmic}
-    % \label{alg_1}
-\end{algorithm}
+\begin{frame}{Calcul de $f$}
+
+\resizebox{1.0\linewidth}{!}{
+\begin{minipage}{\linewidth}
+\begin{align*}
+f^{k+1} &= \arg\min\limits_{f} \{
+\frac{1}{2} 
+\lVert g - Hf^{k} \rVert_{2}^{2}
++ \lambda \lVert (d^{k}_{x}, d^{k}_{y}) \rVert_{1}
++ \frac{\sigma}{2} \lVert d^{k}_{x} - \nabla_{x}f^{k} - b^{k}_{x} \rVert_{2}^{2}
++ \frac{\sigma}{2} \lVert d^{k}_{y} - \nabla_{y}f^{k} - b^{k}_{y} \rVert_{2}^{2}
+\} \\
+&= \arg\min\limits_{f} \{
+\frac{1}{2} 
+\lVert g - SHf^{k} \rVert_{2}^{2}
++ \frac{\sigma}{2} \lVert d^{k}_{x} - \nabla_{x}f^{k} - b^{k}_{x} \rVert_{2}^{2}
++ \frac{\sigma}{2} \lVert d^{k}_{y} - \nabla_{y}f^{k} - b^{k}_{y} \rVert_{2}^{2}
+\}
+\end{align*}
+\end{minipage}
+}
+
 \end{frame}
+
+\begin{frame}{Calcul de $f$}
+
+\resizebox{1\linewidth}{!}{
+\begin{minipage}{\linewidth}
+\begin{align*}
+&\frac{d}{df} \{
+\frac{1}{2} \lVert g - Hf \rVert_{2}^{2}
++ \frac{\sigma}{2} \lVert d_{x} - \nabla_{x}f - b_{x} \rVert_{2}^{2}
++ \frac{\sigma}{2} \lVert d_{y} - \nabla_{y}f - b_{y} \rVert_{2}^{2}
+\} = 0
+\end{align*}
+\end{minipage}
+}
+
+\resizebox{1\linewidth}{!}{
+\begin{minipage}{\linewidth}
+\begin{align*}
+&\implies - H^{T} (g - Hf)
+- \sigma \nabla_{x}^{T} (d_{x} - \nabla_{x}f - b_{x})
+- \sigma \nabla_{y}^{T} (d_{y} - \nabla_{y}f - b_{y})
+= 0 \\
+&\iff - H^{T} g + H^{T} Hf
+- \sigma \nabla_{x}^{T} d_{x} 
++ \sigma \nabla_{x}^{T} \nabla_{x}f 
++ \sigma \nabla_{x}^{T} b_{x}
+- \sigma \nabla_{y}^{T} d_{y} 
++ \sigma \nabla_{y}^{T} \nabla_{y}f 
++ \sigma \nabla_{y}^{T} b_{y}
+= 0 \\
+&\iff H^{T} Hf
++ \sigma \nabla_{x}^{T} \nabla_{x}f 
++ \sigma \nabla_{y}^{T} \nabla_{y}f 
+= \sigma \nabla_{x}^{T} d_{x}
+- \sigma \nabla_{x}^{T} b_{x}
++ \sigma \nabla_{y}^{T} d_{y} 
+- \sigma \nabla_{y}^{T} b_{y} 
++ H^{T} g \\
+\end{align*}
+\end{minipage}
+}
+
+\begin{columns}
+
+\column{.5\textwidth}
+\centering
+\resizebox{1\linewidth}{!}{
+\begin{minipage}{\linewidth}
+\begin{align*}
+&H^{T}Hf
++ \sigma \nabla_{x}^{T} \nabla_{x}f 
++ \sigma \nabla_{y}^{T} \nabla_{y}f \\
+&= [
+    H^{T}H 
+    +  \sigma (
+            \nabla_{x}^{T} \nabla_{x}
+            + \nabla_{y}^{T} \nabla_{y}
+        )
+] f \\
+&= [H^{T}H + \sigma \Delta] f
+\end{align*}
+\end{minipage}
+}
+
+\column{.5\textwidth}
+\vline
+\centering
+\resizebox{1\linewidth}{!}{
+\begin{minipage}{\linewidth}
+\begin{align*}
+&\sigma \nabla_{x}^{T} d_{x}
+- \sigma \nabla_{x}^{T} b_{x}
++ \sigma \nabla_{y}^{T} d_{y} 
+- \sigma \nabla_{y}^{T} b_{y} 
++ H^{T} g \\
+&= \sigma \nabla_{x}^{T} (d_{x} - b_{x})
++ \sigma \nabla_{y}^{T} (d_{y} - b_{y}) 
++ H^{T} g \\
+&= \sigma [
+    \nabla_{x}^{T} (d_{x} - b_{x})
+    + \nabla_{y}^{T} (d_{y} - b_{y})
+] + H^{T} g \\
+\end{align*}
+\end{minipage}
+}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}{Calcul de $f$}
+Ainsi, dans le domaine spatial, nous avons : \\
+\resizebox{1\linewidth}{!}{
+\begin{minipage}{\linewidth}
+\begin{align*}
+f = [H^{T}H + \sigma \Delta]^{-1}
+[\sigma ( 
+    \nabla_{x}^{T} (d_{x} - b_{x})
+    + \nabla_{y}^{T} (d_{y} - b_{y})
+    ) + H^{T} g] \\
+\end{align*}
+\end{minipage}
+}
+\end{frame}
+
+\begin{frame}{Calcul de $(d_x, d_y)$}
+
+\resizebox{1\linewidth}{!}{
+\begin{minipage}{\linewidth}
+\begin{align*}
+(d^{k+1}_{x}, d^{k+1}_{y}) &= \arg\min\limits_{d_x, d_y} \{
+\frac{1}{2} 
+\lVert g - Hf^{k} \rVert_{2}^{2}
++ \lambda \lVert (d^{k}_{x}, d^{k}_{y}) \rVert_{1}
++ \frac{\sigma}{2} \lVert d^{k}_{x} - \nabla_{x}f^{k} - b^{k}_{x} \rVert_{2}^{2}
++ \frac{\sigma}{2} \lVert d^{k}_{y} - \nabla_{y}f^{k} - b^{k}_{y} \rVert_{2}^{2}
+\} \\
+&= \arg\min\limits_{d_x, d_y} \{
+\lambda \lVert (d^{k}_{x}, d^{k}_{y}) \rVert_{1}
++ \frac{\sigma}{2} \lVert d^{k}_{x} - \nabla_{x}f^{k} - b^{k}_{x} \rVert_{2}^{2}
++ \frac{\sigma}{2} \lVert d^{k}_{y} - \nabla_{y}f^{k} - b^{k}_{y} \rVert_{2}^{2}
+\} \\
+&= \arg\min\limits_{d_x, d_y} \{
+\lambda \lVert (d^{k}_{x}, d^{k}_{y}) \rVert_{1}
++ \frac{\sigma}{2} \lVert d^{k}_{x} - (\nabla_{x}f^{k} + b^{k}_{x}) \rVert_{2}^{2}
++ \frac{\sigma}{2} \lVert d^{k}_{y} - (\nabla_{y}f^{k} + b^{k}_{y}) \rVert_{2}^{2}
+\} \\
+\end{align*}
+\end{minipage}
+}
+
+\begin{align*}
+\begin{dcases*}
+d_{x}^{k+1} = \max (s^{k} - \frac{\lambda}{\sigma}, 0) \frac{s_{x}^{k}}{s^{k}} \\
+d_{y}^{k+1} = \max (s^{k} - \frac{\lambda}{\sigma}, 0) \frac{s_{y}^{k}}{s^{k}} \\
+\end{dcases*}
+\end{align*}
+
+Avec,
+\begin{align*}
+\begin{dcases*}
+s_{x}^{k} = \nabla_{x}f^{k} + b_{x}^{k} \\
+s_{y}^{k} = \nabla_{y}f^{k} + b_{y}^{k} \\
+s^{k} = \sqrt{(s_{x}^{k})^{2} + (s_{y}^{k})^{2}}
+\end{dcases*}
+\end{align*}
+
+\end{frame}
+
+% \begin{frame}{Remarques sur la notation $\nabla$ (gradient)}
+
+% % \begin{align*}
+% % \nabla 
+% % = \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}
+% % = \begin{bmatrix} \nabla_{x} \\ \nabla_{y} \end{bmatrix}
+% % \end{align*}
+
+% \begin{align*}
+% \nabla 
+% &= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}
+% = \begin{bmatrix} \nabla_{x} \\ \nabla_{y} \end{bmatrix} \\
+% \nabla^{T}
+% &= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}^{T}
+% = \begin{bmatrix} \frac{d}{dx} & \frac{d}{dy} \end{bmatrix} \\
+% &= \begin{bmatrix} \nabla_{x} \\ \nabla_{y} \end{bmatrix}^{T}
+% = \begin{bmatrix} \nabla_{x}^{T} & \nabla_{y}^{T} \end{bmatrix} 
+% \text{(Transpose of block matrix)} \\
+% \nabla f 
+% &= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix} f 
+% = \begin{bmatrix} \frac{df}{dx} \\ \frac{df}{dy} \end{bmatrix}
+% = \begin{bmatrix} \nabla_{x}f \\ \nabla_{y}f \end{bmatrix}
+% \end{align*}
+
+
+% \end{frame}
+
+% \begin{frame}{Remarques sur la notation $\nabla$ (gradient)}
+
+% % \begin{align*}
+% % \nabla 
+% % = \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}
+% % = \begin{bmatrix} \nabla_{x} \\ \nabla_{y} \end{bmatrix}
+% % \end{align*}
+
+% \begin{align*}
+% \nabla 
+% &= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}
+% = \begin{bmatrix} \nabla_{x} \\ \nabla_{y} \end{bmatrix} \\
+% \nabla^{T}
+% &= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix}^{T}
+% = \begin{bmatrix} \frac{d}{dx} & \frac{d}{dy} \end{bmatrix} \\
+% &= \begin{bmatrix} \nabla_{x} \\ \nabla_{y} \end{bmatrix}^{T}
+% = \begin{bmatrix} \nabla_{x}^{T} & \nabla_{y}^{T} \end{bmatrix} 
+% \text{(Transpose of block matrix)} \\
+% \nabla f 
+% &= \begin{bmatrix} \frac{d}{dx} \\ \frac{d}{dy} \end{bmatrix} f 
+% = \begin{bmatrix} \frac{df}{dx} \\ \frac{df}{dy} \end{bmatrix}
+% = \begin{bmatrix} \nabla_{x}f \\ \nabla_{y}f \end{bmatrix}
+% \end{align*}
+
+
+% \end{frame}
+
+% \begin{frame}{Remarques sur la notation $\Delta$ (Laplacien)}
+
+% \begin{align*}
+% \nabla^{T} \nabla &= \begin{bmatrix} 
+% \frac{d}{dx} \\ 
+% \frac{d}{dy} 
+% \end{bmatrix}^{T}
+% \begin{bmatrix} 
+% \frac{d}{dx} \\ 
+% \frac{d}{dy} 
+% \end{bmatrix}
+% = \begin{bmatrix} 
+% \frac{d}{dx} & \frac{d}{dy} 
+% \end{bmatrix} \begin{bmatrix} 
+% \frac{d}{dx} \\ 
+% \frac{d}{dy} 
+% \end{bmatrix}
+% = \frac{d^{2}}{dx^{2}} + \frac{d^{2}}{dy^{2}}
+% = \Delta \\
+% &= \begin{bmatrix} 
+% \nabla_{x} \\ 
+% \nabla_{y} 
+% \end{bmatrix}^{T}
+% \begin{bmatrix} 
+% \nabla_{x} \\ 
+% \nabla_{y} 
+% \end{bmatrix}
+% = \begin{bmatrix} 
+% \nabla_{x}^{T} & \nabla_{y}^{T}
+% \end{bmatrix} \begin{bmatrix} 
+% \nabla_{x} \\ 
+% \nabla_{y} 
+% \end{bmatrix}
+% = \nabla_{x}^{T} \nabla_{x} + \nabla_{y}^{T} \nabla_{y}
+% = \Delta \\
+% \end{align*}
+
+% \end{frame}

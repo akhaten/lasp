@@ -6,11 +6,7 @@
 \beamer@subsectionintoc {2}{1}{Definition}{9}{0}{2}
 \beamer@subsectionintoc {2}{2}{Algorithm}{11}{0}{2}
 \beamer@subsectionintoc {2}{3}{Exemple}{13}{0}{2}
-\beamer@sectionintoc {3}{Split Bregman}{19}{0}{3}
-\beamer@subsectionintoc {3}{1}{Definition}{20}{0}{3}
-\beamer@subsectionintoc {3}{2}{Algorithm}{21}{0}{3}
-\beamer@subsectionintoc {3}{3}{Exemple}{22}{0}{3}
-\beamer@sectionintoc {4}{Chambolle Pock}{29}{0}{4}
-\beamer@subsectionintoc {4}{1}{Definition}{30}{0}{4}
-\beamer@subsectionintoc {4}{2}{Algorithm}{31}{0}{4}
-\beamer@subsectionintoc {4}{3}{Exemple}{32}{0}{4}
+\beamer@sectionintoc {3}{Split Bregman}{23}{0}{3}
+\beamer@subsectionintoc {3}{1}{Definition}{24}{0}{3}
+\beamer@subsectionintoc {3}{2}{Algorithm}{26}{0}{3}
+\beamer@subsectionintoc {3}{3}{Exemple}{27}{0}{3}

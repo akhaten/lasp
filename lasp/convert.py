@@ -1,14 +1,19 @@
 import numpy
 
 def signal_to_noise_ratio(signal_power: float, noise_power: float) -> float:
-    """
+    """Compute Signal to Noise Ratio (SNR)
+    
+    Params:
         signal_power : power of signal
         noise_power : power of noise
+    
+    Return:
+        - snr
     """
     return signal_power / noise_power
 
 def signal_to_noise_ratio_db(signal_power: float, noise_power: float) -> float:
-    """
+    """Compute Signal to Noise Ratio in dB (SNRdB)
         signal_power : power of signal
         noise_power : power of noise
     """
@@ -19,28 +24,34 @@ def signal_to_noise_ratio_db(signal_power: float, noise_power: float) -> float:
 
 
 def snrdb_to_snr(snr_db: float) -> float:
+    """Convert SNRdB to SNR
+    """
     return 10**(snr_db/10)
 
 
 def snr_to_snrdb(snr: float) -> float:
+    """Convert SNR to SNRdB
+    """
     return 10*numpy.log10(snr)
 
+snr = signal_to_noise_ratio
+snrdb = signal_to_noise_ratio_db
 
-def snr(signal_power: float, noise_power: float) -> float:
-    """
-        signal_power : power of signal
-        noise_power : power of noise
-    """
-    return signal_power / noise_power
+# def snr(signal_power: float, noise_power: float) -> float:
+#     """Compute 
+#         signal_power : power of signal
+#         noise_power : power of noise
+#     """
+#     return signal_power / noise_power
 
 
-def snrdb(signal_power: float, noise_power: float) -> float:
-    """
-        signal_power : power of signal
-        noise_power : power of noise
-    """
-    s = snr(signal_power, noise_power)
-    return snr_to_snrdb(s)
+# def snrdb(signal_power: float, noise_power: float) -> float:
+#     """
+#         signal_power : power of signal
+#         noise_power : power of noise
+#     """
+#     s = snr(signal_power, noise_power)
+#     return snr_to_snrdb(s)
 
 
 # def rgb_to_grey_level(image: numpy.ndarray, method: GreyMethod) -> numpy.ndarray:

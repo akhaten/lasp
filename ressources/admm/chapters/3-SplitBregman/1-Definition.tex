@@ -8,3 +8,31 @@
         % subsectionstyle=show/shaded,
     ]
 }
+
+\begin{frame}{Definition}
+
+% Résolution avec Split Bregman:
+% \begin{itemize}
+%     \item Équation : $\min\limits_{x} \{ f(x) + \lVert \nabla x \rVert_{1} \}$
+%     \item Contrainte : $Ax + Bz = c$
+% \end{itemize}
+
+% \begin{itemize}
+%     \item Équation : $\min\limits_{x} \{ f(x) + \lVert  x \rVert_{1} \}$
+%     \item Contrainte : $Ax + Bz = c$
+% \end{itemize}
+
+% \vspace{5mm}
+
+% Lagrangien augmenté :
+
+% \begin{align*}
+% L(x, z, u) 
+% &= f(x) + g(z) + u^{T}(Ax + Bz - c) 
+% + \frac{\rho}{2} \lVert Ax + Bz - c \rVert_{2}^{2} \\
+% &= f(x) + g(z)
+% + \frac{\rho}{2} \lVert Ax + Bz - c + \frac{u}{\rho} \rVert_{2}^{2}
+% - \frac{\lVert u \rVert_{2}^{2}}{2\rho} \\
+% \end{align*}
+
+\end{frame}

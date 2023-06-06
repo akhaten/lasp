@@ -2,6 +2,14 @@ import numpy
 import typing
 
 def dx(image: numpy.ndarray) -> numpy.ndarray:
+    """ Derivation by column
+
+    Params:
+        - image
+    
+    Return:
+        - first element of gradient
+    """
 
     nb_rows, nb_cols = numpy.shape(image)
     image_derivated = numpy.zeros(shape=(nb_rows, nb_cols))
@@ -15,6 +23,14 @@ def dx(image: numpy.ndarray) -> numpy.ndarray:
     
 
 def dy(image: numpy.ndarray) -> numpy.ndarray:
+    """ Derivation by line
+
+    Params:
+        - image
+    
+    Return:
+        - second element of gradient
+    """
     
     nb_rows, nb_cols = numpy.shape(image)
     image_derivated = numpy.zeros(shape=(nb_rows, nb_cols))
@@ -28,6 +44,14 @@ def dy(image: numpy.ndarray) -> numpy.ndarray:
 
 
 def dxT(image: numpy.ndarray) -> numpy.ndarray:
+    """ Derivation Transposed by column
+
+    Params:
+        - image
+    
+    Return:
+        - first element of gradient transposed
+    """
 
     nb_rows, nb_cols = numpy.shape(image)
     image_derivated = numpy.zeros(shape=(nb_rows, nb_cols))
@@ -41,7 +65,14 @@ def dxT(image: numpy.ndarray) -> numpy.ndarray:
 
 
 def dyT(image: numpy.ndarray) -> numpy.ndarray:
+    """ Derivation Transposed by line
+
+    Params:
+        - image
     
+    Return:
+        - second element of gradient transposed
+    """
     nb_rows, nb_cols = numpy.shape(image)
     image_derivated = numpy.zeros(shape=(nb_rows, nb_cols))
     
@@ -57,6 +88,16 @@ def differential_matrix(
     derivate: typing.Callable[[numpy.ndarray], numpy.ndarray],
     shape_out: tuple[int, int]
 ) -> numpy.ndarray:
+    """Create matrix to compute derivation by dot matrix
+
+
+    Params:
+        - derivate : dx, dy, dxT or dyT
+        - shape_out : shape of output
+
+    Return:
+        - Discrete Difinition with Finite Elements like matrix
+    """
     # N, M = shape_out
     # return derivate(numpy.eye(N, M))
     nb_rows, nb_cols = shape_out

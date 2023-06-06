@@ -12,10 +12,12 @@ pkgs.mkShell {
         python310Packages.pandas
 
 
-        # Package for Jupyter
+        # Package for Jupyter / To comment
         python310Packages.ipywidgets
         python310Packages.ipykernel
         python310Packages.ipympl
+
+   
 
         
 
