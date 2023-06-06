@@ -11,7 +11,9 @@ differential computing.
 - [x] Tykhonov
 - [ ] ISTA
 - [x] ADMM-LASSO
-- [ ] ADMM-TV / Total Variation / Rudin-Osher-Fatemi Model
+- [ ] Total Variation / Rudin-Osher-Fatemi Model
+    - [x] Split-Bregman
+    - [ ] ADMM
     - [ ] Chambolle Algorithm
     - [ ] Nesterov Algorithm
     - [ ] Weiss-Nesterov Algorithm
