@@ -12,7 +12,10 @@ setup(
     author = 'Jessy Khafif',
     author_email= 'khafifjessy.github@gmail.com',
     packages= [
-        'lasp'
+        'lasp',
+        'lasp/algorithm',
+        'lasp/filters',
+        'lasp/norms'
     ],
     install_requires=requirements
 )
