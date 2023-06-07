@@ -15,15 +15,14 @@ def read(image_path: pathlib.Path) -> numpy.ndarray:
 
     return image
 
-def save(img: numpy.ndarray, image_path: pathlib.Path) -> None:
+def save(data: numpy.ndarray, data_path: pathlib.Path) -> None:
     
-    ext = image_path.suffix
+    ext = data_path.suffix
 
     if ext == '.npy':
-        with open(image_path) as f:
-            numpy.save(f, img)
+        numpy.save(data_path, data)
     else:
-        matplotlib.pyplot.imsave(image_path, img, cmap='gray')
+        matplotlib.pyplot.imsave(data_path, data, cmap='gray')
 
 
 # def plot_images(grid: numpy.ndarray, titles: numpy.ndarray, cmap: str) -> None:
