@@ -1,6 +1,7 @@
 numpy
 scipy
 matplotlib
+pandas
 
 # Package for Jupyter
 ipywidgets
