@@ -2,7 +2,7 @@
 Linear Algebra Signal Processing : A python module for signal processing
 
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://akhaten-lasp-i5faeyy63dd.ws-eu98.gitpod.io/)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#https://github.com/akhaten/lasp.git)
 
 
 lasp is a python module for signal and image processing.
