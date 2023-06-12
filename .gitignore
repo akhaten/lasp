@@ -5,3 +5,5 @@ tps
 controle
 venv
 tests/Mumford-Shah/Tests
+tests/Mumford-Shah/Tests_v2
+tests/MumfordShahSR
