@@ -2,6 +2,7 @@
 import numpy
 
 import lasp.metrics
+import lasp.utils
 
 
 def additive_white_gaussian_noise(signal: numpy.ndarray, snr: float) -> numpy.ndarray:
@@ -25,13 +26,19 @@ def additive_white_gaussian_noise(signal: numpy.ndarray, snr: float) -> numpy.nd
     #     noise = [(numpy.sqrt(power_noise) * numpy.sqrt(1/2) * (reals[0][i] + 1j * imags[0][i])) for i in range(0, N)]# bruit Gaussien 
     #     return signal + noise
 
-    signal_power = lasp.metrics.power(signal)
+    # signal_noised = numpy.array(signal, numpy.double)
+    signal_double = signal.astype(numpy.double)
+
+    signal_power = lasp.metrics.power(signal_double)
     noise_power = signal_power / snr
     sigma, mu = numpy.sqrt(noise_power), 0.0
-    noise = numpy.random.normal(loc=mu, scale=sigma, size=signal.shape)
-    signal_noised = signal+noise
+    noise = numpy.random.normal(loc=mu, scale=sigma, size=signal_double.shape)
+    signal_noised = signal_double+noise
     # grey level image must not have negative value
-    signal_noised[signal_noised < 0.0] = 0.0
+    # signal_noised[signal_noised < 0.0] = 0.0
+
+    signal_noised = lasp.utils.normalize(signal_noised) * 255
+
     return signal_noised
 
 def multiplicative_noise(signal: numpy.ndarray, snr: float) -> numpy.ndarray:
