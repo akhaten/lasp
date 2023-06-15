@@ -56,7 +56,7 @@ def fourier_diagonalization(kernel: numpy.ndarray, shape_out: numpy.ndarray) -> 
     nb_rows, nb_cols = kernel.shape
     kernel_padded = numpy.zeros(shape_out)
     kernel_padded[:nb_rows, :nb_cols] = numpy.copy(kernel)
-    center = numpy.round(numpy.array(kernel.shape)/2).astype(int) 
+    center = numpy.divide(kernel.shape, 2).astype(numpy.int8) + 1
     circshifted = circshift(kernel_padded, 1-center)
     return numpy.fft.fft2(circshifted)
 
