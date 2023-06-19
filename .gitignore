@@ -7,3 +7,4 @@ venv
 
 tests/Mumford-Shah
 tests/MumfordShahSR
+tests/ADMM-SR
