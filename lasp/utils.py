@@ -2,6 +2,9 @@ import numpy
 import enum
 import typing
 
+
+# import pandas
+
 # class Window2D:
 
 #     def __init__(self, array: numpy.ndarray, shape: tuple[int, int]) -> None:
@@ -28,6 +31,15 @@ import typing
 #         for i in range(self.i_min, self.i_max):
 #             for j in range(self.j_min, self.j_max):
 #                 yield self.__getitem__((i, j))
+
+
+# class DatasetPandas:
+
+#     def __init__(self, columns: list[str]) -> None:
+#         self.df = pandas.DataFrame(columns=columns)
+
+#     def 
+
 
           
 def circshift(matrix: numpy.ndarray, shift: numpy.ndarray) -> numpy.ndarray:

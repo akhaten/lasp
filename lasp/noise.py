@@ -5,6 +5,22 @@ import lasp.metrics
 import lasp.utils
 
 
+def get_awgn(signal: numpy.ndarray, snr: float) -> tuple[int, numpy.ndarray]:
+
+    """
+    TODO: Tests
+    """
+    # signal_noised = numpy.array(signal, numpy.double)
+    signal_double = signal.astype(numpy.double)
+
+    signal_power = lasp.metrics.power(signal_double)
+    noise_power = signal_power / snr
+    sigma, mu = numpy.sqrt(noise_power), 0.0
+    noise = numpy.random.normal(loc=mu, scale=sigma, size=signal_double.shape)
+    
+    return noise_power, noise
+
+
 def additive_white_gaussian_noise(signal: numpy.ndarray, snr: float) -> numpy.ndarray:
     
     """Additive White Gaussian Noise (AWGN)
