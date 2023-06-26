@@ -41,6 +41,15 @@ import typing
 #     def 
 
 
+def pad(array: numpy.ndarray, shape_out: numpy.ndarray | tuple) -> numpy.ndarray:
+    
+    out_rows, out_cols = shape_out
+    nb_rows, nb_cols = array.shape
+
+    pad_rows = out_rows-nb_rows
+    pad_cols = out_cols-nb_cols
+    return numpy.pad(array, pad_width=[(0, pad_rows), (0, pad_cols)])
+
           
 def circshift(matrix: numpy.ndarray, shift: numpy.ndarray) -> numpy.ndarray:
     """Circular Shift
@@ -56,6 +65,19 @@ def circshift(matrix: numpy.ndarray, shift: numpy.ndarray) -> numpy.ndarray:
     return numpy.roll(matrix, shift, [0, 1])
 
 
+def compute_center(array: numpy.ndarray) -> numpy.ndarray:
+    center = numpy.array(array.shape) // 2
+    if (center != 0).all():
+        center += 1
+    return center
+
+def pad_circshift_center(array: numpy.ndarray, shape_out: numpy.ndarray | tuple) -> numpy.ndarray:
+    padded = pad(array, shape_out)
+    center = compute_center(array)
+    circshifted = circshift(padded, 1-center)
+    return circshifted
+
+
 def fourier_diagonalization(kernel: numpy.ndarray, shape_out: numpy.ndarray) -> numpy.ndarray:
     """Diagonalize input in Fourier space
 
@@ -66,12 +88,37 @@ def fourier_diagonalization(kernel: numpy.ndarray, shape_out: numpy.ndarray) -> 
     Returns:
         Diagonalisation in Fourier space (Complex Array) of kernel with dimension shape out
     """
-    nb_rows, nb_cols = kernel.shape
-    kernel_padded = numpy.zeros(shape_out)
-    kernel_padded[:nb_rows, :nb_cols] = numpy.copy(kernel)
-    center = numpy.divide(kernel.shape, 2).astype(numpy.int8) + 1
-    circshifted = circshift(kernel_padded, 1-center)
-    return numpy.fft.fft2(circshifted)
+    return numpy.fft.fft2(pad_circshift_center(kernel, shape_out))
+    # nb_rows, nb_cols = kernel.shape
+    # kernel_padded = numpy.zeros(shape_out)
+    # kernel_padded[:nb_rows, :nb_cols] = numpy.copy(kernel)
+
+
+    # center_row = nb_rows // 2
+    # center_col = nb_cols // 2
+    
+
+
+    # center = numpy.divide(kernel.shape, 2).astype(numpy.int8) + 1
+    # circshifted = circshift(kernel_padded, 1-center)
+
+    # print(numpy.array(kernel.shape) / 2)
+    # print(numpy.round(numpy.array(kernel.shape) / 2))
+    # center = numpy.array(kernel.shape) // 2
+    
+    # if (center != 0).all():
+    #     # print('diff')
+    #     center += 1
+    # # center[center != 0] += 1
+    # # center = center.astype(numpy.int8)
+
+    # print('center :', center)
+    # circshifted = circshift(kernel_padded, 1-center)
+    # # circshifted = numpy.roll(kernel_padded, 1-center[0], 1)
+    # # circshifted = numpy.roll(kernel_padded, 1-center[1], 0)
+    # return circshifted
+    # print('circshifted :\n', circshifted)
+    # return numpy.fft.fft2(circshifted)
 
 
 def normalize(img: numpy.ndarray) -> numpy.ndarray:
