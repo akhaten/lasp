@@ -30,8 +30,6 @@ def mumford_shah_denoise_v1(
     Dyt = lasp.differential.dyT
 
     # Build kernel
-    uker = numpy.zeros_like(y)
-
     laplacian = lasp.filters.linear.laplacian()
     lap_diag = lasp.utils.fourier_diagonalization(
         kernel = laplacian,
@@ -52,12 +50,13 @@ def mumford_shah_denoise_v1(
 
     for _ in range(0, nb_iterations):
 
-        rhs2= sigma*Dxt(d_x-b_x)+sigma*Dyt(d_y-b_y)
+        rhs2 = sigma*Dxt(d_x-b_x)+sigma*Dyt(d_y-b_y)
         rhsfft = rhs1fft + numpy.fft.fft2(rhs2)
 
         u0=numpy.copy(u)
         
-        u = numpy.real(numpy.fft.ifft2(rhsfft / uker))    
+        u_fft = rhsfft / uker
+        u = numpy.real(numpy.fft.ifft2(u_fft))    
 
         err = numpy.linalg.norm(u-u0, 'fro') / numpy.linalg.norm(u, 'fro')
         
@@ -67,7 +66,7 @@ def mumford_shah_denoise_v1(
         if err < tolerance:
             break
         
-        u_dx, u_dy = Dx(u), Dx(y)
+        u_dx, u_dy = Dx(u), Dy(u)
 
         d_x, d_y = lasp.thresholding.multidimensional_soft(
             d = numpy.array([ u_dx + b_x, u_dy + b_y ]),
@@ -97,20 +96,16 @@ def mumford_shah_denoise_v2(
     Solve argmin_{x} { (alpha/2) || y - x ||^2 + (beta/2) || nabla y ||^2 + || nabla y ||_1 }
     """
 
-    Dx = numpy.zeros(y)
-    Dx[0, 0:2] = numpy.array([1, -1])
-    Dx = numpy.fft.fft2(Dx)
+    Dx_pad = lasp.utils.pad(numpy.array([[1, -1]]), y.shape)
+    Dx = numpy.fft.fft2(Dx_pad)
     Dxt = numpy.conj(Dx)
 
-    Dy = numpy.zeros_like(y)
-    Dy[0:2, 0] = numpy.transpose(numpy.array([1, -1]))
-    Dy = numpy.fft.fft2(Dy)
+    Dy_pad = lasp.utils.pad(numpy.transpose(numpy.array([[1, -1]])), y.shape)
+    Dy = numpy.fft.fft2(Dy_pad)
     Dyt = numpy.conj(Dy)
 
 
     # Build kernel
-    uker = numpy.zeros_like(y)
-
     laplacian = lasp.filters.linear.laplacian()
     lap_diag = lasp.utils.fourier_diagonalization(
         kernel = laplacian,
@@ -134,7 +129,7 @@ def mumford_shah_denoise_v2(
         rhs2fft = sigma*Dxt*numpy.fft.fft2(d_x-b_x)+sigma*Dyt*numpy.fft.fft2(d_y-b_y)
         rhsfft = rhs1fft + rhs2fft
 
-        u0=numpy.copy(u)
+        u0 = numpy.copy(u)
         
         u_fft = rhsfft / uker
         u = numpy.real(numpy.fft.ifft2(u_fft))    
@@ -151,12 +146,7 @@ def mumford_shah_denoise_v2(
         u_dy = numpy.real(numpy.fft.ifft2(Dy * u_fft))
 
         d_x, d_y = lasp.thresholding.multidimensional_soft(
-            d = numpy.array(
-                [ 
-                    u_dx + b_x,
-                    u_dy + b_y 
-                ]
-            ),
+            d = numpy.array([ u_dx + b_x, u_dy + b_y ]),
             epsilon = 1/sigma
         )
 
@@ -183,26 +173,31 @@ def mumford_shah_denoise_v3(
     Solve argmin_{x} { (alpha/2) || y - x ||^2 + (beta/2) || nabla y ||^2 + || nabla y ||_1 }
     """
 
-    Dx = numpy.zeros(y)
-    Dx[0, 0:2] = numpy.array([1, -1])
-    Dx = numpy.fft.fft2(Dx)
+    Dx_pad = lasp.utils.pad(numpy.array([[1, -1]]), y.shape)
+    Dx = numpy.fft.fft2(Dx_pad)
     Dxt = numpy.conj(Dx)
 
-    Dy = numpy.zeros_like(y)
-    Dy[0:2, 0] = numpy.transpose(numpy.array([1, -1]))
-    Dy = numpy.fft.fft2(Dy)
+    Dy_pad = lasp.utils.pad(numpy.transpose(numpy.array([[1, -1]])), y.shape)
+    Dy = numpy.fft.fft2(Dy_pad)
     Dyt = numpy.conj(Dy)
 
 
     # Build kernel
-    uker = numpy.zeros_like(y)
 
-    laplacian = Dxt * Dx + Dyt * Dy
-    lap_diag = lasp.utils.fourier_diagonalization(
-        kernel = laplacian,
+    Dx_diag = lasp.utils.fourier_diagonalization(
+        kernel = Dx_pad,
         shape_out = y.shape 
     )
-   
+    Dxt_diag = numpy.conj(Dx_diag)
+
+    Dy_diag = lasp.utils.fourier_diagonalization(
+        kernel = Dy_pad,
+        shape_out = y.shape 
+    )
+    Dyt_diag = numpy.conj(Dy_diag)
+
+    lap_diag = Dxt_diag * Dx_diag + Dyt_diag * Dy_diag
+    
 
     uker = alpha + (beta+sigma) * lap_diag
 
@@ -360,7 +355,7 @@ def mumford_shah_deconv_v2(
     # Dxt = lasp.differential.dxT
     # Dyt = lasp.differential.dyT
 
-    Dx = numpy.zeros(y)
+    Dx = numpy.zeros_like(y)
     Dx[0, 0:2] = numpy.array([1, -1])
     Dx = numpy.fft.fft2(Dx)
     Dxt = numpy.conj(Dx)
@@ -453,35 +448,35 @@ def mumford_shah_deconv_v3(
     # TODO: make test
     Solve argmin_{x} { (alpha/2) || y - Hx ||^2 + (beta/2) || nabla y ||^2 + || nabla y ||_1
 
-    Difference with v1 ?
+    Difference with v2 ?
     We use Derivation in fourier space
     and we set lap_diag = Dxt * Dx + Dyt * Dy and not laplacia  filter
     """
 
-    # Dx = lasp.differential.dx
-    # Dy = lasp.differential.dy
-    # Dxt = lasp.differential.dxT
-    # Dyt = lasp.differential.dyT
-
-    Dx = numpy.zeros(y)
-    Dx[0, 0:2] = numpy.array([1, -1])
-    Dx = numpy.fft.fft2(Dx)
+    Dx_pad = lasp.utils.pad(numpy.array([[1, -1]]), y.shape)
+    Dx = numpy.fft.fft2(Dx_pad)
     Dxt = numpy.conj(Dx)
 
-    Dy = numpy.zeros_like(y)
-    Dy[0:2, 0] = numpy.transpose(numpy.array([1, -1]))
-    Dy = numpy.fft.fft2(Dy)
+    Dy_pad = lasp.utils.pad(numpy.transpose(numpy.array([[1, -1]])), y.shape)
+    Dy = numpy.fft.fft2(Dy_pad)
     Dyt = numpy.conj(Dy)
 
     # Build kernel
 
-    laplacian = lasp.filters.linear.laplacian()
-    lap_diag = lasp.utils.fourier_diagonalization(
-        kernel = laplacian,
+    Dx_diag = lasp.utils.fourier_diagonalization(
+        kernel = Dx_pad,
         shape_out = y.shape 
     )
-    lap_diag = Dxt * Dx + Dyt * Dy
-    #lap_diag = numpy.abs(Dx)**2 + numpy.abs(Dy)**2
+    Dxt_diag = numpy.conj(Dx_diag)
+
+    Dy_diag = lasp.utils.fourier_diagonalization(
+        kernel = Dy_pad,
+        shape_out = y.shape 
+    )
+    Dyt_diag = numpy.conj(Dy_diag)
+
+    lap_diag = Dxt_diag * Dx_diag + Dyt_diag * Dy_diag
+   
    
     h_diag = lasp.utils.fourier_diagonalization(
         kernel = h,
@@ -538,7 +533,7 @@ def mumford_shah_deconv_v3(
         b_y += (u_dy - d_y)
 
     u_normalized = lasp.utils.normalize(u)
-
+    
     return u_normalized
 
 
@@ -552,23 +547,14 @@ def mumford_shah_fsr(
     d: int,
     nb_iterations: int,
     tolerance: float,
+    gamma: float = 0.,
     error_history: list[float] = None
 ) -> numpy.ndarray:
 
-    def block_mm(nr, nc, Nb, x1, order: str) -> numpy.ndarray:
-
-        block_shape = numpy.array([nr, nc])
-
-        x1 = lasp.utils.blockproc_reshape(x1, block_shape, order)
-        x1 = numpy.reshape(x1, newshape=(nr*nc, Nb), order=order)
-        x1 = numpy.sum(x1, axis=1)
-        x = numpy.reshape(x1, newshape=(nr, nc), order=order)
-
-        return x
 
     """Mumford Shah
     # TODO: make test
-    Solve $$argmin_{x} { (alpha/2) || y - Hx ||^2 + (beta/2) || nabla y ||^2 + || nabla y ||_1$$
+    Solve $$argmin_{x} { (alpha/2) || y - Hx ||^2 + (beta0/2) || nabla y ||^2 + beta1 || nabla y ||_1$$
 
     Params:
         - y: low resolution
@@ -586,34 +572,45 @@ def mumford_shah_fsr(
         - high resolution of y
     """
 
+    def block_mm(nr, nc, Nb, x1, order: str) -> numpy.ndarray:
+
+        block_shape = numpy.array([nr, nc])
+
+        x1 = lasp.utils.blockproc_reshape(x1, block_shape, order)
+        x1 = numpy.reshape(x1, newshape=(nr*nc, Nb), order=order)
+        x1 = numpy.sum(x1, axis=1)
+        x = numpy.reshape(x1, newshape=(nr, nc), order=order)
+
+        return x
+
+
+    # print(alpha, beta0, beta1)
+
     y_rows, y_cols = y.shape
 
-    # Dx = lasp.differential.dx
-    # Dy = lasp.differential.dy
-    # Dxt = lasp.differential.dxT
-    # Dyt = lasp.differential.dyT
-
-    Dx = numpy.zeros(shape=(d*y_rows, d*y_cols))
-    Dx[0, 0:2] = numpy.array([1, -1])
-    Dx = numpy.fft.fft2(Dx)
+    Dx_pad = lasp.utils.pad(numpy.array([[1, -1]]), (d*y_rows, d*y_cols))
+    Dx = numpy.fft.fft2(Dx_pad)
     Dxt = numpy.conj(Dx)
 
-    Dy = numpy.zeros(shape=(d*y_rows, d*y_cols))
-    Dy[0:2, 0] = numpy.transpose(numpy.array([1, -1]))
-    Dy = numpy.fft.fft2(Dy)
+    Dy_pad = lasp.utils.pad(numpy.transpose(numpy.array([[1, -1]])), (d*y_rows, d*y_cols))
+    Dy = numpy.fft.fft2(Dy_pad)
     Dyt = numpy.conj(Dy)
-
 
     # Build kernel
 
-    # laplacian = lasp.filters.linear.laplacian()
-    # lap_diag = lasp.utils.fourier_diagonalization(
-    #     kernel = laplacian,
-    #     shape_out = y.shape 
-    # )
-    #######
-    lap_diag = Dxt * Dx + Dyt * Dy + 1e-8
-    #lap_diag = numpy.abs(Dx)**2 + numpy.abs(Dy)**2
+    Dx_diag = lasp.utils.fourier_diagonalization(
+        kernel = Dx_pad,
+        shape_out = (d*y_rows, d*y_cols)
+    )
+    Dxt_diag = numpy.conj(Dx_diag)
+
+    Dy_diag = lasp.utils.fourier_diagonalization(
+        kernel = Dy_pad,
+        shape_out = (d*y_rows, d*y_cols) 
+    )
+    Dyt_diag = numpy.conj(Dy_diag)
+
+    lap_diag = Dxt_diag * Dx_diag + Dyt_diag * Dy_diag  + gamma
    
     h_diag = lasp.utils.fourier_diagonalization(
         kernel = h,
@@ -623,15 +620,11 @@ def mumford_shah_fsr(
     h_diag_transp = numpy.conj(h_diag)
 
     h2_diag = numpy.abs(h_diag)**2
-
-
-    #uker = alpha * h2_diag + (beta+sigma) * lap_diag
-    lap_diag = (2*beta0+sigma) * lap_diag
-
-    
+ 
     STy = numpy.zeros(shape=(d*y_rows, d*y_cols))
     STy[0::d, 0::d] = numpy.copy(y)
     rhs1fft = alpha * h_diag_transp * numpy.fft.fft2(STy)
+
 
     # Initialization
     import PIL.Image
@@ -673,13 +666,16 @@ def mumford_shah_fsr(
         # invW = block_mm(y.shape[0], y.shape[1], d*d, h2_diag / lap_diag, order='F')
         invW = block_mm(y_rows, y_cols, d*d, h2_diag / lap_diag, order='F')
         # invWBR = fbr / (invW + beta1*d*d)
-        invWBR = fbr / (invW + beta1*d*d)
+        invWBR = fbr / ( invW + (beta0+sigma) * (d*d / alpha) )
         fun = lambda block : block*invWBR
         FCBinvWBR = lasp.utils.blockproc(numpy.copy(h_diag_transp), numpy.array([y_rows, y_cols]), fun)
         ## Returns
         u_fft = (rhsfft - FCBinvWBR) / lap_diag
+        u_fft /= (beta0 + sigma)
         # u_fft /= beta1
         ##########
+        
+        # u_fft = rhsfft / uker
 
         # Compute errors
         u = numpy.real(numpy.fft.ifft2(u_fft))    
