@@ -40,6 +40,10 @@ import typing
 
 #     def 
 
+def decimation(image: numpy.ndarray, d: int) -> numpy.ndarray:
+    if d <= 0:
+        raise AssertionError('d <= 0')
+    return numpy.copy(image[0::d, 0::d])
 
 def pad(array: numpy.ndarray, shape_out: numpy.ndarray | tuple) -> numpy.ndarray:
     
