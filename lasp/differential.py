@@ -84,6 +84,21 @@ def dyT(image: numpy.ndarray) -> numpy.ndarray:
     return image_derivated
 
 
+def derivation(arr: numpy.ndarray, axis: int) -> numpy.ndarray:
+    shape = numpy.copy(arr.shape)
+    n = shape[axis]
+    taken = numpy.take(arr, axis=axis, indices=n-1)
+    shape[axis] = 1
+    to_add = numpy.reshape(taken, shape)
+    return numpy.diff(arr, prepend=to_add, axis=axis)
+
+
+def kernel_identity(dim: int) -> numpy.array:
+    shape = numpy.full(shape=dim, fill_value=1)
+    one_nd = numpy.full(shape=tuple(shape), fill_value=1)
+    return numpy.pad(array=one_nd, pad_width=1)
+
+
 def differential_matrix(
     derivate: typing.Callable[[numpy.ndarray], numpy.ndarray],
     shape_out: tuple[int, int]

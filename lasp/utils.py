@@ -71,14 +71,14 @@ def circshift(matrix: numpy.ndarray, shift: numpy.ndarray) -> numpy.ndarray:
 
 def compute_center(array: numpy.ndarray) -> numpy.ndarray:
     center = numpy.array(array.shape) // 2
-    if (center != 0).all():
-        center += 1
+    #if (center != 0).all():
+    #    center += 1
     return center
 
 def pad_circshift_center(array: numpy.ndarray, shape_out: numpy.ndarray | tuple) -> numpy.ndarray:
     padded = pad(array, shape_out)
     center = compute_center(array)
-    circshifted = circshift(padded, 1-center)
+    circshifted = circshift(padded, -center)
     return circshifted
 
 
