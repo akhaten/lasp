@@ -6,6 +6,33 @@ sys.path.append('../../..')
 
 import lasp.io
 
+import lasp.metrics
+
+def compute_metrics(
+    df_to_process: pandas.DataFrame, 
+    index: int
+) -> None:
+
+    imgs_gen_path = pathlib.Path(df_to_process.attrs['imgs_gen_path'])
+    output_path = pathlib.Path(df_to_process.attrs['output_path'])
+    params = df_to_process.loc[index]
+    # print(params.keys())
+
+    df_imgs_index = params['index']
+
+    original = lasp.io.read(
+        imgs_gen_path / str(df_imgs_index) / 'original.npy'
+    )
+
+    # print(imgs_gen_path / str(df_imgs_index) / 'original.npy')
+    # print(output_path / str(index) / 'output.npy')
+    output = lasp.io.read(
+        output_path / str(index) / 'output.npy'
+    )
+    
+
+    return lasp.metrics.PSNR(original, output, intensity_max=255)
+
 def title_from(params: pandas.Series) -> str:
 
     alpha = params['alpha']
@@ -33,8 +60,10 @@ def title_from(params: pandas.Series) -> str:
     
     params_deblur_str = 'Deblur filter : {}x{}, $\sigma$={}\n'.format(deblur[0], deblur[0], deblur[1])
 
-    title = params_algo_str+params_blur_str+params_noise_str+params_deblur_str
-    
+    title = params_algo_str \
+        + params_blur_str \
+        + params_noise_str \
+        + params_deblur_str    
     return title
     
 
@@ -55,6 +84,10 @@ def plot1x3(dataset_params: pandas.DataFrame, index: int, dataset_path: pathlib.
     figure.subplots_adjust(top=1.4)
     
     title = title_from(params)
+
+    psnr_str = str(lasp.metrics.PSNR(original, output, intensity_max=255))
+    title += psnr_str
+    
     figure.suptitle('Mumford-Shah \n'+title)
     # figure.tight_layout()
     
