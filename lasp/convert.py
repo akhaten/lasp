@@ -26,26 +26,26 @@ def signal_to_noise_ratio_db(signal_power: float, noise_power: float) -> float:
 def snrdb_to_snr(snr_db: float) -> float:
     """Convert SNRdB to SNR
 
-    snr_{dB} = 20 * log_{10}(snr)
+    snr_{dB} = 10 * log_{10}(snr)
     
-    snr_{dB} / 20 = log_{10}(snr)
+    snr_{dB} / 10 = log_{10}(snr)
     
-    snr = 10^{snr_{dB} / 20}
+    snr = 10^{snr_{dB} / 10}
     """
-    return 10**(snr_db/20)
+    return 10**(snr_db/10)
 
 
 def snr_to_snrdb(snr: float) -> float:
     """Convert SNR to SNRdB
 
-    snr = 10^{snr_{dB} / 20}
+    snr = 10^{snr_{dB} / 10}
     
-    log_{10}(snr) = snr_{dB} / 20
+    log_{10}(snr) = snr_{dB} / 10
     
-    snr_{dB} = 20 *  log_{10}(snr)
+    snr_{dB} = 10 * log_{10}(snr)
 
     """
-    return 20*numpy.log10(snr)
+    return 10*numpy.log10(snr)
 
 snr = signal_to_noise_ratio
 snrdb = signal_to_noise_ratio_db
