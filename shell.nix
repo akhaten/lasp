@@ -11,6 +11,9 @@ pkgs.mkShell {
         python310Packages.pandas
         python310Packages.tqdm
 
+        # Torch
+        python310Packages.torchWithoutCuda
+
         # Package for Jupyter / To comment
         python310Packages.ipywidgets
         python310Packages.ipykernel

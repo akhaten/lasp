@@ -14,7 +14,7 @@
     \caption{ADMM} % \label{euclid}
     \begin{algorithmic}[1]
         \Procedure{ADMM}{}\newline
-        \textbf{Input:} $y$, $\lambda$, $\rho$, $nb\_iterations$ \\
+        \textbf{Input:} $y$; $\alpha$; $\forall i \in \Omega, \beta_{i}$, $\rho$, $nb\_iterations$ \\
         \textbf{Output:} $x_{nb\_iterations}$
         \For{\texttt{$k \in 0...nb\_iterations$}}
             \State{$x_{k+1} = \arg\min\limits_{x} {L(x_{k}, z_{k}, u_{k})}$}

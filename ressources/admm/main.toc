@@ -1,12 +1,13 @@
 \babel@toc {english}{}\relax 
-\beamer@sectionintoc {1}{Generality}{3}{0}{1}
-\beamer@subsectionintoc {1}{1}{Optimization problem}{4}{0}{1}
-\beamer@subsectionintoc {1}{2}{Exemple}{6}{0}{1}
-\beamer@sectionintoc {2}{ADMM}{8}{0}{2}
-\beamer@subsectionintoc {2}{1}{Definition}{9}{0}{2}
-\beamer@subsectionintoc {2}{2}{Algorithm}{11}{0}{2}
-\beamer@subsectionintoc {2}{3}{Exemple}{13}{0}{2}
-\beamer@sectionintoc {3}{Split Bregman}{23}{0}{3}
-\beamer@subsectionintoc {3}{1}{Definition}{24}{0}{3}
-\beamer@subsectionintoc {3}{2}{Algorithm}{26}{0}{3}
-\beamer@subsectionintoc {3}{3}{Exemple}{27}{0}{3}
+\beamer@sectionintoc {1}{Généralités}{3}{0}{1}
+\beamer@subsectionintoc {1}{1}{Problématique}{4}{0}{1}
+\beamer@subsectionintoc {1}{2}{Modèles mathématiques}{9}{0}{1}
+\beamer@subsectionintoc {1}{3}{Exemple}{13}{0}{1}
+\beamer@sectionintoc {2}{ADMM}{15}{0}{2}
+\beamer@subsectionintoc {2}{1}{Definition}{16}{0}{2}
+\beamer@subsectionintoc {2}{2}{Algorithm}{18}{0}{2}
+\beamer@subsectionintoc {2}{3}{Exemple}{20}{0}{2}
+\beamer@sectionintoc {3}{Split Bregman}{30}{0}{3}
+\beamer@subsectionintoc {3}{1}{Definition}{31}{0}{3}
+\beamer@subsectionintoc {3}{2}{Algorithm}{33}{0}{3}
+\beamer@subsectionintoc {3}{3}{Exemple}{34}{0}{3}

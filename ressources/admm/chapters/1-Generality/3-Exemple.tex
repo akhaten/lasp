@@ -1,0 +1,51 @@
+\subsection{Exemple}
+
+\frame{
+    \tableofcontents[ 
+        currentsubsection, 
+        % hideothersubsections,
+        % sectionstyle=show/hide,
+        % subsectionstyle=show/shaded,
+    ]
+}
+
+% \begin{frame}{Modèle inspiré de Mumford-Shah}
+% En utilisant les deux "à prioris" (termes de régularisation) ci-dessous
+% \begin{align*}
+% \begin{dcases*}
+% R_{0}(f) = \frac{1}{2} \lVert \nabla f \rVert_{2}^{2} \\
+% R_{1}(f) = \lVert \nabla f \rVert_{1}
+% \end{dcases*}
+% \end{align*}
+    
+% nous avons la formulation suivante :
+% \begin{align*}
+% \hat{f} = \arg\min\limits_{f} \{ 
+% \frac{\alpha}{2} 
+% \underbrace{\lVert g - SHf \rVert_{2}^{2}}_{\text{Attache aux données}} 
+% + \frac{\beta_{0}}{2}
+% \underbrace{\lVert \nabla f \rVert_{2}^{2}}_{\text{Energie de Dirichlet}}
+% + \beta_{1} 
+% \underbrace{\lVert \nabla f \rVert_{1}}_{\text{Variation Totale}}
+% \}  
+% \end{align*}
+% \end{frame}
+
+\begin{frame}{Tikhonov : $R(x) = \lVert x \rVert_{2}^{2}$}
+
+\begin{align*}
+&\hat{x} = \arg\min\limits_{x} \{ 
+    \frac{\alpha}{2} \lVert y - Hx \rVert_{2}^{2} 
+    + \beta_{0} \lVert x \rVert_{2}^{2}
+\} \\
+&\frac{d}{dx} \{
+    \frac{\alpha}{2} \lVert y - Hx \rVert_{2}^{2} 
+    + \beta_{0} \lVert x \rVert_{2}^{2}
+\} = 0 \\
+&\iff - \alpha H^{T} (y - Hx) + 2 \beta_{0} x = 0 \\
+&\iff - \alpha H^{T} y + \alpha H^{T}Hx + 2 \beta_{0} x = 0 \\
+&\iff - \alpha H^{T} y + (\alpha H^{T}H + 2 \beta_{0} I) x = 0 \\
+&\iff x = (\alpha H^{T}H + 2\beta_{0} I)^{-1} \alpha H^{T} y \\
+\end{align*}
+
+\end{frame}

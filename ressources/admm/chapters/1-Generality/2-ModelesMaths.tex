@@ -1,0 +1,93 @@
+\subsection{Modèles mathématiques}
+
+\frame{
+    \tableofcontents[ 
+        currentsubsection, 
+    ]
+}
+
+\begin{frame}{Modèle mathématique générique}
+% \begin{align*}
+% \hat{f} = \arg\min\limits_{f} \{ 
+%     \frac{\alpha}{2} 
+%     \lVert g - SHf \rVert_{2}^{2}
+%     + \sum\limits_{i \in \Omega} \beta_{i} \times R_{i}(f)
+% \}  
+% \end{align*}
+\begin{align*}
+\hat{f} = \arg\min\limits_{f} \{ 
+    \frac{\alpha}{2} 
+    \underbrace{\lVert g - SHf \rVert_{2}^{2}}_{\text{Attache aux données}} 
+    + \underbrace{
+        \sum\limits_{i \in \Omega} \beta_{i} \times R_{i}(f)
+    }_{\text{combinaison de régularisation}}
+\} 
+\end{align*}
+Avec, \begin{itemize}
+\item $g$ : la donnée observée avec détérioration
+\item $S$ : un opérateur de décimation
+% \item $h$ un kernel de convolution 
+\item $H$ : la matrice BCCB obtenue à partir du kernel $h$
+\item $f$ : la donnée désirée sans détérioration
+\item $\alpha$ : un hyper-paramètre
+\item $\Omega$ : l'ensemble des indices des régularisations
+\item $\beta_{i}$ : l'hyper-paramètre associé au terme 
+    de régularisation $R_{i}$
+\item $R_{i}$ : régurisation d'indice $i$ \\
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Modèle mathématique générique}
+\begin{align*}
+g &= S(h \circledast f) + n \\
+&= S H f + n \iff n = g - S H f
+\end{align*}
+\hrule
+\begin{align*}
+\hat{f} = \arg\min\limits_{f} \{ 
+    \frac{\alpha}{2} 
+    \lVert g - SHf \rVert_{2}^{2}
+    + \sum\limits_{i \in \Omega} \beta_{i} \times R_{i}(f)
+\}  
+\end{align*}
+% \begin{align*}
+% \hat{f} = \arg\min\limits_{f} \{ 
+%     \frac{\alpha}{2} 
+%     \underbrace{\lVert g - SHf \rVert_{2}^{2}}_{\text{Attache aux données}} 
+%     + \underbrace{
+%         \sum\limits_{i \in \Omega} \beta_{i} \times R_{i}(f)
+%     }_{\text{combinaison de régularisation}}
+% \} 
+% \end{align*}
+\end{frame}
+
+\begin{frame}{Modèle mathématique générique}
+\begin{align*}
+\hat{f} = \arg\min\limits_{f} \{ 
+    \frac{\alpha}{2} 
+    \lVert g - SHf \rVert_{2}^{2}
+    + \sum\limits_{i \in \Omega} \beta_{i} \times R_{i}(f)
+\}  
+\end{align*}
+Dans un langage plus naturel :
+\begin{center}
+\textbf{
+    \emph{
+        Nous recherchons $f$ tel qu'il minimise le bruit $n$ \\
+        sachant que nous avons un ensemble de 
+        connaissances/régularisations \\
+        certaines sur $f$. \\
+    }
+}
+\end{center} 
+\end{frame}
+
+% \subsection{Modèle inspiré de Mumford-Shah pour la super-résolution}
+
+% \frame{
+%     \tableofcontents[ 
+%         currentsubsection, 
+%     ]
+% }
+
+

@@ -1,0 +1,71 @@
+\subsection{Problématique}
+
+\frame{
+    \tableofcontents[ 
+        currentsubsection, 
+        % hideothersubsections,
+        % sectionstyle=show/hide,
+        % subsectionstyle=show/shaded,
+    ]
+}
+
+
+\begin{frame}{Présentation de la problématique}
+\begin{center}
+\textbf{
+    \emph{
+        "Comment pouvons nous retrouver une donnée originale sachant \\
+        qu'elle a été détérioré ?"
+    }
+    % décimée, bruitée et floutée
+}
+\end{center} 
+\end{frame}
+
+\begin{frame}{Vers un problème formel}
+\begin{align*}
+g &= S(h \circledast f) + n \\
+&= S H f + n
+\end{align*}
+
+Avec, \begin{itemize}
+\item $g$ l'image observée avec une basse résolution
+\item $S$ est un opérateur de décimation
+\item $h$ un kernel de convolution 
+\item $H$ la matrice BCCB obtenue à partir du kernel $h$
+\item $f$ l'image désirée avec une haute résolution
+\item $n$ un bruit additif
+\item $\circledast$ l'opération de la convolution circulaire \\
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Vers un problème formel}
+\begin{align*}
+g &= S(h \circledast f) + n \\
+&= S H f + n
+\end{align*}
+
+L'énoncé formalisé se lit comme : \\
+\begin{center}
+\textbf{
+    \emph{
+        $g$ est le résultat de $f$ ayant subit un flou "$H$" suivi \\
+        d'une décimation "$S$", puis bruité par "$n$". \\
+        L'objectif est donc de retrouver $f$. \\
+    }
+}
+\end{center} 
+\end{frame}
+
+
+\begin{frame}{Les problèmes inverses}
+\begin{itemize}
+\item C'est un problème inverse
+\item Dans la littérature, ce genre de problème est abordé avec
+    des modèles mathématiques
+\item Il existe des algorithmes itératifs permettant de résoudre
+    des problèmes inverses en minimisant un modèle mathématique
+\end{itemize}
+\end{frame}
+    

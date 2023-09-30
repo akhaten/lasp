@@ -1,9 +1,7 @@
 import numpy
 import numpy.linalg
-import enum
 from scipy.fft import fft, fft2, ifft2
 
-import lasp.norms.vector
 import lasp.thresholding
 import lasp.utils
 import lasp.differential
