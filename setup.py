@@ -15,7 +15,6 @@ setup(
         'lasp',
         'lasp/algorithm',
         'lasp/filters',
-        'lasp/norms',
         'lasp/torch'
     ],
     install_requires=requirements
