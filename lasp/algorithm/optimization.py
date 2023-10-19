@@ -91,7 +91,7 @@ def tv(
     b_x=numpy.zeros_like(y)
     b_y=numpy.zeros_like(y)
 
-    for i in range(0, nb_iterations):
+    for i in range(1, nb_iterations+1):
 
         a = sigma * (
             lasp.differential.dxT(d_x-b_x)
@@ -113,18 +113,16 @@ def tv(
         if err <= tol:
             break
 
+        u_dx = lasp.differential.dx(u)
+        u_dy = lasp.differential.dy(u)
+
         d_x, d_y = lasp.thresholding.multidimensional_soft(
-            numpy.array(
-                [
-                    lasp.differential.dx(u)+b_x,
-                    lasp.differential.dy(u)+b_y
-                ]
-            ),
+            numpy.array([u_dx+b_x, u_dy+b_y]),
             lamda/sigma
         )
 
-        b_x=b_x+lasp.differential.dx(u)-d_x
-        b_y=b_y+lasp.differential.dy(u)-d_y
+        b_x += (u_dx-d_x)
+        b_y += (u_dy-d_y)
 
     min_u = numpy.min(u)
     max_u = numpy.max(u)

@@ -93,36 +93,7 @@ def fourier_diagonalization(kernel: numpy.ndarray, shape_out: numpy.ndarray) -> 
         Diagonalisation in Fourier space (Complex Array) of kernel with dimension shape out
     """
     return numpy.fft.fft2(pad_circshift_center(kernel, shape_out))
-    # nb_rows, nb_cols = kernel.shape
-    # kernel_padded = numpy.zeros(shape_out)
-    # kernel_padded[:nb_rows, :nb_cols] = numpy.copy(kernel)
-
-
-    # center_row = nb_rows // 2
-    # center_col = nb_cols // 2
-    
-
-
-    # center = numpy.divide(kernel.shape, 2).astype(numpy.int8) + 1
-    # circshifted = circshift(kernel_padded, 1-center)
-
-    # print(numpy.array(kernel.shape) / 2)
-    # print(numpy.round(numpy.array(kernel.shape) / 2))
-    # center = numpy.array(kernel.shape) // 2
-    
-    # if (center != 0).all():
-    #     # print('diff')
-    #     center += 1
-    # # center[center != 0] += 1
-    # # center = center.astype(numpy.int8)
-
-    # print('center :', center)
-    # circshifted = circshift(kernel_padded, 1-center)
-    # # circshifted = numpy.roll(kernel_padded, 1-center[0], 1)
-    # # circshifted = numpy.roll(kernel_padded, 1-center[1], 0)
-    # return circshifted
-    # print('circshifted :\n', circshifted)
-    # return numpy.fft.fft2(circshifted)
+   
 
 
 def normalize(img: numpy.ndarray) -> numpy.ndarray:
